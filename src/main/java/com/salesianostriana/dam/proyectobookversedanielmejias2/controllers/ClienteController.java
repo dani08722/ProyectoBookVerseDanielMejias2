@@ -9,11 +9,11 @@ import lombok.RequiredArgsConstructor;
 @Controller @RequiredArgsConstructor
 public class ClienteController {
 
-	private final ClienteRepository clienteRepository;
+	private final ClienteRepository clienteRepo;
 
 	@GetMapping("/index")
 	public String prueba(Model model) {
-		model.addAttribute("Clientes", clienteRepository.findAll());
+		model.addAttribute("Clientes", clienteRepo.findAll());
 		return "index";
 	}
 	

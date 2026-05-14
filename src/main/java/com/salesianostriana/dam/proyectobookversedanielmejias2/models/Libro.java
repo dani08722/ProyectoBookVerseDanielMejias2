@@ -9,7 +9,9 @@ import jakarta.persistence.OneToMany;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Entity
 @Data @Builder
@@ -35,6 +37,8 @@ public class Libro {
     private boolean disponible;
     
     @Builder.Default
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     @OneToMany(mappedBy = "libro")
     private List<LineaPedido> lineasPedido = new ArrayList<>();
 

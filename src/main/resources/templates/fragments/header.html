@@ -13,10 +13,10 @@
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav me-auto">
                         <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" th:href="@{/}">Inicio</a>
+                            <a class="nav-link active" aria-current="page" th:href="@{/index}">Inicio</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" th:href="@{/libros}">Catalogo</a>
+                            <a class="nav-link" th:href="@{/catalogo}">Catalogo</a>
                         </li>
                     </ul>
                     <ul class="navbar-nav align-items-center">
@@ -53,13 +53,7 @@
             </div>
         </nav>
 
-        <section class="bg-white py-5 text-center border-bottom shadow-sm">
-            <div class="container py-4">
-                <h1 class="display-4 fw-bold text-dark mb-3">Bienvenido a BookVerse</h1>
-                <p class="lead text-secondary mb-4">Descubre tu proxima aventura literaria entre miles de titulos.</p>
-                <a th:href="@{/libros}" class="btn btn-primary btn-lg px-5 rounded-pill shadow-sm">Ver Catalogo completo</a>
-            </div>
-        </section>
+        
     </header>
 </body>
 </html>

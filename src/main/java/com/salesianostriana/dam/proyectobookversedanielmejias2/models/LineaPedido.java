@@ -9,7 +9,9 @@ import jakarta.persistence.Transient;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Entity
 @Data @Builder
@@ -22,16 +24,22 @@ public class LineaPedido {
 	
 	@ManyToOne
 	@JoinColumn(name = "pedido_id")
+	@ToString.Exclude
+	@EqualsAndHashCode.Exclude
 	private Pedido pedido; //FK
 	
 	@ManyToOne
     @JoinColumn(name = "libro_isbn")
+	@ToString.Exclude
+	@EqualsAndHashCode.Exclude
 	private Libro libro; //FK
 	
 	private int cantidad;
 	private double precioUnitario;
 	
 	@Transient
-	private double subtotal;
+	public double getSubtotal() {
+		return cantidad * precioUnitario;
+	}
 	
 }
