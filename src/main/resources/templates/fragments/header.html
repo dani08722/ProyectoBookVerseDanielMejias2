@@ -18,6 +18,29 @@
                         <li class="nav-item">
                             <a class="nav-link" th:href="@{/catalogo}">Catalogo</a>
                         </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="gestionarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="bi bi-gear"></i> Gestionar
+                            </a>
+                            <ul class="dropdown-menu shadow-sm border-0 mt-2" aria-labelledby="gestionarDropdown">
+                                <li>
+                                    <a class="dropdown-item py-2" th:href="@{/admin/libros}">
+                                        <i class="bi bi-book me-2 text-primary"></i> Libros
+                                    </a>
+                                </li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li>
+                                    <a class="dropdown-item py-2 disabled" href="#" aria-disabled="true">
+                                        <i class="bi bi-people me-2 text-secondary"></i> Clientes
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item py-2 disabled" href="#" aria-disabled="true">
+                                        <i class="bi bi-receipt me-2 text-secondary"></i> Pedidos
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
                     </ul>
                     <ul class="navbar-nav align-items-center">
                         <li class="nav-item me-3">
@@ -30,7 +53,7 @@
                         </li>
 
                         <li class="nav-item dropdown">
-                            <a class="btn btn-outline-light btn-sm px-4 rounded-pill dropdown-toggle" href="#" id="navbarDropdown" role="button" aria-expanded="false">
+                            <a class="btn btn-outline-light btn-sm px-4 rounded-pill dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 <i class="bi bi-person-circle"></i> Mi Cuenta
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0 mt-2" aria-labelledby="navbarDropdown">
