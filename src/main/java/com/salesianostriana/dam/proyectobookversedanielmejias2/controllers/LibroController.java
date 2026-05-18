@@ -48,7 +48,7 @@ public class LibroController {
 	@PostMapping("/admin/libros/eliminar/{isbn}")
 	@Transactional
 	public String eliminarLibro(@PathVariable String isbn) {
-		lineaPedidoRepo.deleteByLibroIsbn(isbn);
+		lineaPedidoRepo.deleteByIsbn(isbn);
 		libroRepo.deleteById(isbn);
 		return "redirect:/admin/libros";
 	}
