@@ -1,5 +1,7 @@
 package com.salesianostriana.dam.proyectobookversedanielmejias2.controllers;
 
+import java.util.Optional;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,6 +25,19 @@ public class LibroController {
         model.addAttribute("libros", libroRepo.findAll());
         return "catalogo"; // Nombre del archivo HTML
     }
+
+	@GetMapping("/libros/{isbn}")
+	public String verDetalleLibro(@PathVariable String isbn, Model model) {
+		
+		Optional<Libro> libro = libroRepo.findById(isbn);
+
+		if (libro.isPresent()) {
+			model.addAttribute("libro", libro.get());
+			return "detalle-libro";
+		}
+
+		return "redirect:/catalogo";
+	}
 
 	@GetMapping("/admin/libros/crear")
 	public String mostrarFormularioCrear(Model model) {
