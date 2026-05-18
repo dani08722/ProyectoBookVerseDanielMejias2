@@ -56,14 +56,15 @@ public class LibroController {
 
 	@GetMapping("/admin/libros/editar/{isbn}")
 	public String mostrarFormularioEditar(@PathVariable String isbn, Model model) {
-		Libro libro = libroRepo.findById(isbn).orElse(null);
+		
+		Optional<Libro> libro = libroRepo.findById(isbn);
 
-		if (libro == null) {
-			return "redirect:/admin/libros";
+		if (libro.isPresent()) {
+			model.addAttribute("libro", libro.get());
+			return "admin/form-libro";
 		}
 
-		model.addAttribute("libro", libro);
-		return "admin/form-libro";
+		return "redirect:/admin/libros";
 	}
 
 	@PostMapping("/admin/libros/submit")
@@ -73,10 +74,15 @@ public class LibroController {
 	}
 
 	@PostMapping("/admin/libros/eliminar/{isbn}")
-	@Transactional
 	public String eliminarLibro(@PathVariable String isbn) {
-		lineaPedidoRepo.deleteByIsbn(isbn);
-		libroRepo.deleteById(isbn);
+		
+		Optional<Libro> libro = libroRepo.findById(isbn);
+
+		if (libro.isPresent()) {
+			lineaPedidoRepo.deleteByIsbn(isbn);
+			libroRepo.delete(libro.get());
+		}
+
 		return "redirect:/admin/libros";
 	}
 
