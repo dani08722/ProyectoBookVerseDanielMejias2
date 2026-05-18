@@ -38,7 +38,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr th:each="libro : ${libros}">
+                            <tr th:each="libro, iterStat : ${libros}">
                                 <td th:text="${libro.isbn}">9780000000000</td>
                                 <td class="fw-semibold" th:text="${libro.titulo}">Titulo</td>
                                 <td th:text="${libro.autor}">Autor</td>
@@ -53,9 +53,34 @@
                                         <a th:href="@{/admin/libros/editar/{isbn}(isbn=${libro.isbn})}" class="btn btn-outline-primary">
                                             <i class="bi bi-pencil-square"></i> Editar
                                         </a>
-                                        <a th:href="@{/admin/libros/eliminar/{isbn}(isbn=${libro.isbn})}" class="btn btn-outline-danger">
+                                        <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" th:data-bs-target="${'#eliminarLibroModal' + iterStat.index}">
                                             <i class="bi bi-trash"></i> Eliminar
-                                        </a>
+                                        </button>
+                                    </div>
+
+                                    <div class="modal fade text-start" th:id="${'eliminarLibroModal' + iterStat.index}" tabindex="-1" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title">Eliminar libro</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <p class="mb-0">
+                                                        ¿Seguro que quieres eliminar
+                                                        <strong th:text="${libro.titulo}">este libro</strong>?
+                                                    </p>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                                    <form th:action="@{/admin/libros/eliminar/{isbn}(isbn=${libro.isbn})}" method="post">
+                                                        <button type="submit" class="btn btn-danger">
+                                                            <i class="bi bi-trash"></i> Terminar de borrar
+                                                        </button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </td>
                             </tr>
