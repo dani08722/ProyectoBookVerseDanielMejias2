@@ -39,6 +39,18 @@ public class LibroController {
 		return "admin/lista-libros";
 	}
 
+	@GetMapping("/admin/libros/editar/{isbn}")
+	public String mostrarFormularioEditar(@PathVariable String isbn, Model model) {
+		Libro libro = libroRepo.findById(isbn).orElse(null);
+
+		if (libro == null) {
+			return "redirect:/admin/libros";
+		}
+
+		model.addAttribute("libro", libro);
+		return "admin/form-libro";
+	}
+
 	@PostMapping("/admin/libros/submit")
 	public String crearLibro(@ModelAttribute("libro") Libro libro) {
 		libroRepo.save(libro);
