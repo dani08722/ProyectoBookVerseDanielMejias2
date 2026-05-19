@@ -46,7 +46,13 @@ public class LibroController {
 		model.addAttribute("libro", new Libro());
 		return "admin/form-libro";
 	}
-
+	
+	@PostMapping("/admin/libros/submit")
+		public String crearLibro(@ModelAttribute("libro") Libro libro) {
+			libroService.save(libro);
+			return "redirect:/admin/libros";
+	}
+			
 	@GetMapping("/admin/libros")
 	public String listarLibrosAdmin(Model model) {
 		model.addAttribute("libros", libroService.findAll());
@@ -66,11 +72,8 @@ public class LibroController {
 		return "redirect:/admin/libros";
 	}
 
-	@PostMapping("/admin/libros/submit")
-	public String crearLibro(@ModelAttribute("libro") Libro libro) {
-		libroService.save(libro);
-		return "redirect:/admin/libros";
-	}
+	
+	
 
 	
 	@PostMapping("/admin/libros/eliminar/{isbn}")
