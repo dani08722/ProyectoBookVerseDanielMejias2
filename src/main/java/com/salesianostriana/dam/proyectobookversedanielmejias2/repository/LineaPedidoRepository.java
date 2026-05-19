@@ -11,6 +11,6 @@ public interface LineaPedidoRepository extends JpaRepository<LineaPedido, Long> 
 
 	@Modifying
 	@Query("delete from LineaPedido lp where lp.libro.isbn = :isbn")
-	void deleteByIsbn(@Param("isbn") String isbn);
+	public void deleteByIsbn(@Param("isbn") String isbn);
 
 }

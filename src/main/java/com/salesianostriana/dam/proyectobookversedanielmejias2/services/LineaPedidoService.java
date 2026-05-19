@@ -9,4 +9,8 @@ import com.salesianostriana.dam.proyectobookversedanielmejias2.services.base.Bas
 @Service
 public class LineaPedidoService extends BaseServiceImpl<LineaPedido, Long, LineaPedidoRepository>{
 
+	public void deleteByIsbn(String isbn) {
+		repository.deleteByIsbn(isbn);
+	}
+	
 }
