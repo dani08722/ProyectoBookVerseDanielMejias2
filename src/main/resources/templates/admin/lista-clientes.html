@@ -30,6 +30,7 @@
                             <tr>
                                 <th scope="col">ID</th>
                                 <th scope="col">Cliente</th>
+                                <th scope="col">Usuario</th>
                                 <th scope="col">Email</th>
                                 <th scope="col">Telefono</th>
                                 <th scope="col">Ciudad</th>
@@ -41,6 +42,7 @@
                             <tr th:each="cliente : ${clientes}">
                                 <td th:text="${cliente.idCliente}">1</td>
                                 <td class="fw-semibold" th:text="${cliente.nombre + ' ' + cliente.apellidos}">Nombre Apellidos</td>
+                                <td th:text="${cliente.user != null ? cliente.user.username : '-'}">usuario</td>
                                 <td th:text="${cliente.email}">cliente@bookverse.com</td>
                                 <td th:text="${cliente.telefono}">600 000 000</td>
                                 <td th:text="${cliente.ciudad}">Sevilla</td>
