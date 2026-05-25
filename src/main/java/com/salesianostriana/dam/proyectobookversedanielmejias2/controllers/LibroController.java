@@ -21,13 +21,15 @@ public class LibroController {
 	private final LibroService libroService;
 	private final LineaPedidoService lineaPedidoService;
 	
+	
 	@GetMapping("/catalogo")
     public String listarTodos(Model model) {
-        // Buscamos todos los libros en la base de datos
+        
         model.addAttribute("libros", libroService.findAll());
-        return "catalogo"; // Nombre del archivo HTML
+        return "catalogo"; //
     }
 
+	
 	@GetMapping("/libros/{isbn}")
 	public String verDetalleLibro(@PathVariable String isbn, Model model) {
 		
@@ -40,6 +42,7 @@ public class LibroController {
 
 		return "redirect:/catalogo";
 	}
+	
 
 	@GetMapping("/admin/libros/crear")
 	public String mostrarFormularioCrear(Model model) {
@@ -47,11 +50,13 @@ public class LibroController {
 		return "admin/form-libro";
 	}
 	
+	
 	@PostMapping("/admin/libros/submit")
 		public String crearLibro(@ModelAttribute("libro") Libro libro) {
 			libroService.save(libro);
 			return "redirect:/admin/libros";
 	}
+	
 			
 	@GetMapping("/admin/libros")
 	public String listarLibrosAdmin(Model model) {
@@ -59,6 +64,7 @@ public class LibroController {
 		return "admin/lista-libros";
 	}
 
+	
 	@GetMapping("/admin/libros/editar/{isbn}")
 	public String mostrarFormularioEditar(@PathVariable String isbn, Model model) {
 		
@@ -71,9 +77,6 @@ public class LibroController {
 
 		return "redirect:/admin/libros";
 	}
-
-	
-	
 
 	
 	@PostMapping("/admin/libros/eliminar/{isbn}")

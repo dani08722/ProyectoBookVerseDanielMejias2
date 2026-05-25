@@ -39,8 +39,11 @@ public class Pedido {
     
     @Enumerated(EnumType.STRING)
     private EstadoPedido estado;
+
     @ManyToOne
     @JoinColumn(name = "cliente_id")
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     private Cliente cliente; //FK
     
     @Builder.Default

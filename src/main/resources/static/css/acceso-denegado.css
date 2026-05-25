@@ -1,0 +1,15 @@
+.error-section {
+    min-height: calc(100vh - 150px);
+    background:
+        linear-gradient(135deg, rgba(220, 53, 69, 0.08), rgba(13, 110, 253, 0.04)),
+        #f8f9fa;
+}
+
+.error-card {
+    max-width: 620px;
+}
+
+.error-icon {
+    width: 72px;
+    height: 72px;
+}

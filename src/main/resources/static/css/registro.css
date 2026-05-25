@@ -1,0 +1,15 @@
+.registro-section {
+    min-height: calc(100vh - 150px);
+    background:
+        linear-gradient(135deg, rgba(13, 110, 253, 0.08), rgba(25, 135, 84, 0.05)),
+        #f8f9fa;
+}
+
+.registro-card {
+    max-width: 680px;
+}
+
+.registro-icon {
+    width: 72px;
+    height: 72px;
+}

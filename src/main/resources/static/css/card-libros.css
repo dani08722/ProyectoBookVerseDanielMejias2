@@ -1,0 +1,16 @@
+.card-img-top {
+    height: 350px;
+    object-fit: contain;
+    background-color: #fff;
+    padding: 12px;
+}
+
+.filter-section {
+    position: sticky;
+    top: 100px;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    transition: 0.3s;
+}

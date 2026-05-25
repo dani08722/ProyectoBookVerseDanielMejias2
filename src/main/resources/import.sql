@@ -1,6 +1,11 @@
-insert into cliente (id_cliente, nombre, apellidos, email, telefono, direccion, ciudad, codigo_postal, pais, password, fecha_registro, activo) values (1,'Daniel','Mejias','daniel@gmail.com','600111222','Calle Real 12','Sevilla','41001','Espana','1234','2026-05-01',true);
-insert into cliente (id_cliente, nombre, apellidos, email, telefono, direccion, ciudad, codigo_postal, pais, password, fecha_registro, activo) values (2,'Lucia','Fernandez','lucia@gmail.com','611222333','Avenida Sol 45','Madrid','28001','Espana','abcd','2026-05-02',true);
-insert into cliente (id_cliente, nombre, apellidos, email, telefono, direccion, ciudad, codigo_postal, pais, password, fecha_registro, activo) values (3,'Carlos','Ruiz','carlos@gmail.com','622333444','Plaza Espana 7','Valencia','46001','Espana','pass123','2026-05-03',false);
+insert into app_user (id, username, password, role) values (1,'daniel','{noop}1234','ADMIN');
+insert into app_user (id, username, password, role) values (2,'lucia','{noop}abcd','USER');
+insert into app_user (id, username, password, role) values (3,'carlos','{noop}pass123','USER');
+alter sequence app_user_seq restart with 4;
+
+insert into cliente (id_cliente, nombre, apellidos, email, telefono, direccion, ciudad, codigo_postal, pais, fecha_registro, activo, user_id) values (1,'Daniel','Mejias','daniel@gmail.com','600111222','Calle Real 12','Sevilla','41001','Espana','2026-05-01',true,1);
+insert into cliente (id_cliente, nombre, apellidos, email, telefono, direccion, ciudad, codigo_postal, pais, fecha_registro, activo, user_id) values (2,'Lucia','Fernandez','lucia@gmail.com','611222333','Avenida Sol 45','Madrid','28001','Espana','2026-05-02',true,2);
+insert into cliente (id_cliente, nombre, apellidos, email, telefono, direccion, ciudad, codigo_postal, pais, fecha_registro, activo, user_id) values (3,'Carlos','Ruiz','carlos@gmail.com','622333444','Plaza Espana 7','Valencia','46001','Espana','2026-05-03',false,3);
 alter sequence cliente_seq restart with 4;
 
 insert into pedido (id_pedido, codigo, fecha, total, estado, metodo_pago, direccion_envio, cliente_id) values (1,'PED-001','2026-05-10',59.99,'PENDIENTE','Tarjeta','Calle Real 12, Sevilla',1);
