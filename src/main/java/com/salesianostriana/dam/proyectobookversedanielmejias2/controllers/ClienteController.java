@@ -60,10 +60,8 @@ public class ClienteController {
 			cliente.setUser(user);
 		}
 		
-		//Si el usuario no tiene ningún rol asignado , se le otorga user como predeterminado.
-		if (user.getRole() == null) {
-			user.setRole(UserRole.USER);
-		}
+		//Los clientes creados desde administracion siempre tienen rol USER.
+		user.setRole(UserRole.USER);
 		
 		//Setea el cliente en user para asegurar que estan relacionados
 		user.setCliente(cliente);

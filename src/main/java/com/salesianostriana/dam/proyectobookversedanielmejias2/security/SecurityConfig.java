@@ -4,6 +4,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
 
@@ -16,8 +19,8 @@ public class SecurityConfig {
 
 		http.authorizeHttpRequests(
 				(authz) -> authz
-					.requestMatchers("/producto/**").authenticated()
-					.requestMatchers("/", "/index", "/login","/catalogo","/libros","/libros/**", "/css/**", "/js/**", "/img/**").permitAll()
+					.requestMatchers("/", "/index", "/login", "/acceso-denegado","/catalogo","/libros","/libros/**", "/css/**", "/js/**", "/img/**").permitAll()
+					.requestMatchers("/admin/**").hasRole("ADMIN")
 					.anyRequest()
 					.authenticated())
 				  .requestCache(cache -> {
@@ -29,6 +32,10 @@ public class SecurityConfig {
 						.loginPage("/login")
 						.defaultSuccessUrl("/index", true)
 						.permitAll()
+				)
+				.exceptionHandling(exception -> exception
+						.accessDeniedHandler((request, response, accessDeniedException) ->
+								response.sendRedirect(request.getContextPath() + "/acceso-denegado"))
 				);
 
 		http.csrf((csrf) -> {
@@ -40,4 +47,12 @@ public class SecurityConfig {
 		return http.build();
 	}
 	
+	public boolean isAdmin() {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+		return authentication != null
+				&& authentication.getAuthorities().stream()
+						.map(GrantedAuthority::getAuthority)
+						.anyMatch("ROLE_ADMIN"::equals);
+	}
 }
