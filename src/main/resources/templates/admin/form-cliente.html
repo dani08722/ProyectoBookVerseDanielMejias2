@@ -19,12 +19,14 @@
                     <div class="card-header bg-primary text-white py-3">
                         <h4 class="mb-0">
                             <i class="bi bi-person-plus"></i>
-                            <span>Anadir Nuevo Cliente</span>
+                            <span th:text="${cliente.idCliente == null ? 'Anadir Nuevo Cliente' : 'Editar Cliente'}">Anadir Nuevo Cliente</span>
                         </h4>
                     </div>
                     <div class="card-body p-4">
 
                         <form th:action="@{/admin/clientes/submit}" th:object="${cliente}" method="post">
+                            <input type="hidden" th:field="*{idCliente}">
+                            <input type="hidden" th:field="*{user.id}">
 
                             <h5 class="text-primary border-bottom pb-2 mb-4">Datos personales</h5>
                             <div class="row g-3">
@@ -76,26 +78,20 @@
                                 </div>
                             </div>
 
-                            <h5 class="text-primary border-bottom pb-2 my-4">Acceso y estado</h5>
+                            <h5 class="text-primary border-bottom pb-2 my-4">Acceso</h5>
                             <div class="row g-3 align-items-end">
-                                <div class="col-md-5">
+                                <div class="col-md-6">
                                     <label for="username" class="form-label fw-bold">Nombre de usuario</label>
                                     <div class="input-group">
                                         <span class="input-group-text"><i class="bi bi-person"></i></span>
                                         <input type="text" th:field="*{user.username}" class="form-control" id="username" placeholder="pedro.herrera" required>
                                     </div>
                                 </div>
-                                <div class="col-md-5">
+                                <div class="col-md-6">
                                     <label for="password" class="form-label fw-bold">Contraseña</label>
                                     <div class="input-group">
                                         <span class="input-group-text"><i class="bi bi-shield-lock"></i></span>
-                                        <input type="password" th:field="*{user.password}" class="form-control" id="password" placeholder="********" required>
-                                    </div>
-                                </div>
-                                <div class="col-md-2">
-                                    <div class="form-check form-switch mb-2">
-                                        <input class="form-check-input" type="checkbox" th:field="*{activo}" id="activo" checked>
-                                        <label class="form-check-label fw-bold" for="activo">Cliente activo</label>
+                                        <input type="password" th:field="*{user.password}" class="form-control" id="password" placeholder="Dejar en blanco para mantenerla" th:required="${cliente.idCliente == null}">
                                     </div>
                                 </div>
                             </div>
@@ -103,7 +99,7 @@
                             <div class="mt-5 d-flex gap-3">
                                 <button type="submit" class="btn btn-primary px-5 rounded-pill">
                                     <i class="bi bi-check-circle"></i>
-                                    <span>Crear Cliente</span>
+                                    <span th:text="${cliente.idCliente == null ? 'Crear Cliente' : 'Guardar Cambios'}">Crear Cliente</span>
                                 </button>
                                 <a th:href="@{/admin/clientes}" class="btn btn-outline-secondary px-5 rounded-pill">
                                     Cancelar
