@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carrito - BookVerse</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+</head>
+<body class="d-flex flex-column min-vh-100 bg-light">
+
+    <header th:replace="~{fragments/header :: header}"></header>
+
+    <main class="container my-5 flex-grow-1">
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-end gap-3 mb-4">
+            <div>
+                <h1 class="fw-bold mb-1">Carrito de compra</h1>
+                <p class="text-muted mb-0">Revisa los libros antes de finalizar el pedido.</p>
+            </div>
+            <a th:href="@{/catalogo}" class="btn btn-outline-primary rounded-pill">
+                <i class="bi bi-arrow-left"></i>
+                Seguir comprando
+            </a>
+        </div>
+
+        <div th:if="${products == null or products.isEmpty()}" class="card border-0 shadow-sm">
+            <div class="card-body text-center py-5">
+                <i class="bi bi-cart-x display-4 text-muted"></i>
+                <h2 class="h4 fw-bold mt-3">Tu carrito esta vacio</h2>
+                <p class="text-muted mb-4">Añade algun libro del catalogo para empezar tu pedido.</p>
+                <a th:href="@{/catalogo}" class="btn btn-primary rounded-pill px-4">
+                    Ver catalogo
+                </a>
+            </div>
+        </div>
+
+        <div th:unless="${products == null or products.isEmpty()}" class="row g-4">
+            <section class="col-lg-8">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-header bg-white py-3">
+                        <h2 class="h5 fw-bold mb-0">Libros seleccionados</h2>
+                    </div>
+
+                    <div class="list-group list-group-flush">
+                        <article class="list-group-item p-3" th:each="item : ${products}">
+                            <div class="row g-3 align-items-center">
+                                <div class="col-3 col-md-2">
+                                    <img th:src="${item.key.imagenUrl != null ? item.key.imagenUrl : 'https://via.placeholder.com/120x160?text=Sin+Portada'}"
+                                         class="img-fluid rounded shadow-sm"
+                                         th:alt="${'Portada de ' + item.key.titulo}">
+                                </div>
+
+                                <div class="col-9 col-md-4">
+                                    <h3 class="h6 fw-bold mb-1" th:text="${item.key.titulo}">Titulo del libro</h3>
+                                    <p class="text-muted small mb-1" th:text="${item.key.autor}">Autor</p>
+                                    <span class="badge bg-secondary-subtle text-secondary" th:text="${item.key.genero}">Genero</span>
+                                </div>
+
+                                <div class="col-6 col-md-2">
+                                    <span class="text-muted small d-block">Precio</span>
+                                    <span class="fw-semibold" th:text="${#numbers.formatDecimal(item.key.precio, 1, 2)} + ' EUR'">19.99 EUR</span>
+                                </div>
+
+                                <div class="col-6 col-md-2">
+                                    <span class="text-muted small d-block">Cantidad</span>
+                                    <div class="d-flex align-items-center gap-2">
+                                        <form th:action="@{/carrito/restar}" method="post">
+                                            <input type="hidden" name="isbn" th:value="${item.key.isbn}">
+                                            <button type="submit" class="btn btn-outline-secondary btn-sm" aria-label="Restar unidad">
+                                                <i class="bi bi-dash"></i>
+                                            </button>
+                                        </form>
+
+                                        <span class="fw-bold text-center" style="min-width: 2rem;" th:text="${item.value}">1</span>
+
+                                        <form th:action="@{/carrito/add}" method="post">
+                                            <input type="hidden" name="isbn" th:value="${item.key.isbn}">
+                                            <button type="submit" class="btn btn-outline-secondary btn-sm" aria-label="Sumar unidad">
+                                                <i class="bi bi-plus"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+
+                                <div class="col-8 col-md-1">
+                                    <span class="text-muted small d-block">Subtotal</span>
+                                    <span class="fw-bold text-primary" th:text="${#numbers.formatDecimal(item.key.precio * item.value, 1, 2)} + ' EUR'">19.99 EUR</span>
+                                </div>
+
+                                <div class="col-4 col-md-1 text-end">
+                                    <form th:action="@{/carrito/eliminar}" method="post">
+                                        <input type="hidden" name="isbn" th:value="${item.key.isbn}">
+                                        <button type="submit" class="btn btn-outline-danger btn-sm" aria-label="Eliminar libro">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </article>
+                    </div>
+                </div>
+            </section>
+
+            <aside class="col-lg-4">
+                <div class="card border-0 shadow-sm position-sticky" style="top: 5rem;">
+                    <div class="card-header bg-white py-3">
+                        <h2 class="h5 fw-bold mb-0">Resumen</h2>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between mb-2">
+                            <span class="text-muted">Articulos</span>
+                            <span class="fw-semibold" th:text="${#aggregates.sum(products.values())}">1</span>
+                        </div>
+
+                        <div class="d-flex justify-content-between mb-3">
+                            <span class="text-muted">Subtotal</span>
+                            <span class="fw-semibold"
+                                  th:with="total=${#aggregates.sum(products.entrySet().![key.precio * value])}"
+                                  th:text="${#numbers.formatDecimal(total, 1, 2)} + ' EUR'">19.99 EUR</span>
+                        </div>
+
+                        <hr>
+
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <span class="h5 fw-bold mb-0">Total</span>
+                            <span class="h4 fw-bold text-primary mb-0"
+                                  th:with="total=${#aggregates.sum(products.entrySet().![key.precio * value])}"
+                                  th:text="${#numbers.formatDecimal(total, 1, 2)} + ' EUR'">19.99 EUR</span>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <form th:action="@{/pedido/confirmar}" method="post">
+                                <button type="submit" class="btn btn-primary w-100 rounded-pill">
+                                    <i class="bi bi-credit-card"></i>
+                                    Finalizar compra
+                                </button>
+                            </form>
+
+                            <form th:action="@{/carrito/vaciar}" method="post">
+                                <button type="submit" class="btn btn-outline-danger w-100 rounded-pill">
+                                    <i class="bi bi-cart-x"></i>
+                                    Vaciar carrito
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+        </div>
+    </main>
+
+    <footer th:replace="~{fragments/footer :: footer}"></footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
