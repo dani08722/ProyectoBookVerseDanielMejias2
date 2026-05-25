@@ -70,4 +70,10 @@ public class SecurityConfig {
 				&& !(authentication instanceof AnonymousAuthenticationToken);
 	}
 
+	public String getUsername() {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+		return isAuthenticated() ? authentication.getName() : "";
+	}
+
 }
