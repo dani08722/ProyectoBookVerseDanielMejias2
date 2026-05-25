@@ -28,4 +28,9 @@ public class MainController {
 		return "acceso-denegado";
 	}
 
+	@GetMapping("/registro")
+	public String registroNoDisponible() {
+		return "registro";
+	}
+
 }

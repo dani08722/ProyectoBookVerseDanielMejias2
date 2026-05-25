@@ -6,6 +6,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
@@ -19,7 +20,7 @@ public class SecurityConfig {
 
 		http.authorizeHttpRequests(
 				(authz) -> authz
-					.requestMatchers("/", "/index", "/login", "/acceso-denegado","/catalogo","/libros","/libros/**", "/css/**", "/js/**", "/img/**").permitAll()
+					.requestMatchers("/", "/index", "/login", "/registro", "/acceso-denegado","/catalogo","/libros","/libros/**", "/css/**", "/js/**", "/img/**").permitAll()
 					.requestMatchers("/admin/**").hasRole("ADMIN")
 					.anyRequest()
 					.authenticated())
@@ -31,6 +32,11 @@ public class SecurityConfig {
 				.formLogin(form -> form
 						.loginPage("/login")
 						.defaultSuccessUrl("/index", true)
+						.permitAll()
+				)
+				.logout(logout -> logout
+						.logoutUrl("/logout")
+						.logoutSuccessUrl("/index")
 						.permitAll()
 				)
 				.exceptionHandling(exception -> exception
@@ -50,9 +56,18 @@ public class SecurityConfig {
 	public boolean isAdmin() {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-		return authentication != null
+		return isAuthenticated()
 				&& authentication.getAuthorities().stream()
 						.map(GrantedAuthority::getAuthority)
 						.anyMatch("ROLE_ADMIN"::equals);
 	}
+
+	public boolean isAuthenticated() {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+		return authentication != null
+				&& authentication.isAuthenticated()
+				&& !(authentication instanceof AnonymousAuthenticationToken);
+	}
+
 }
