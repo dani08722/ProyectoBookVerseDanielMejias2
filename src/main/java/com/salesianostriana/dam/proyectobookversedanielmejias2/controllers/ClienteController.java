@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import com.salesianostriana.dam.proyectobookversedanielmejias2.models.Cliente;
@@ -41,10 +42,42 @@ public class ClienteController {
 		return "admin/form-cliente";
 	}
 
+	@GetMapping("/admin/clientes/editar/{id}")
+	public String mostrarFormularioEditar(@PathVariable Long id, Model model) {
+		return clienteService.findById(id)
+				.map(cliente -> {
+					if (cliente.getUser() == null) {
+						cliente.setUser(User.builder()
+								.role(UserRole.USER)
+								.build());
+					}
+					model.addAttribute("cliente", cliente);
+					return "admin/form-cliente";
+				})
+				.orElse("redirect:/admin/clientes");
+	}
+
 	
 	@PostMapping("/admin/clientes/submit")
 	public String crearCliente(@ModelAttribute("cliente") Cliente cliente) {
-		cliente.setFechaRegistro(LocalDate.now());
+		if (cliente.getIdCliente() == null) {
+			cliente.setFechaRegistro(LocalDate.now());
+			cliente.setActivo(true);
+		} else {
+			clienteService.findById(cliente.getIdCliente())
+					.ifPresent(clienteExistente -> {
+						cliente.setFechaRegistro(clienteExistente.getFechaRegistro());
+						cliente.setActivo(clienteExistente.isActivo());
+
+						if (clienteExistente.getUser() != null && cliente.getUser() != null) {
+							cliente.getUser().setRole(clienteExistente.getUser().getRole());
+
+							if (cliente.getUser().getPassword() == null || cliente.getUser().getPassword().isBlank()) {
+								cliente.getUser().setPassword(clienteExistente.getUser().getPassword());
+							}
+						}
+					});
+		}
 		prepararUsuario(cliente);
 		clienteService.save(cliente);
 		return "redirect:/admin/clientes";
@@ -60,8 +93,9 @@ public class ClienteController {
 			cliente.setUser(user);
 		}
 		
-		//Los clientes creados desde administracion siempre tienen rol USER.
-		user.setRole(UserRole.USER);
+		if (user.getRole() == null) {
+			user.setRole(UserRole.USER);
+		}
 		
 		//Setea el cliente en user para asegurar que estan relacionados
 		user.setCliente(cliente);

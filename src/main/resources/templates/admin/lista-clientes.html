@@ -35,11 +35,11 @@
                                 <th scope="col">Telefono</th>
                                 <th scope="col">Ciudad</th>
                                 <th scope="col">Fecha registro</th>
-                                <th scope="col">Estado</th>
+                                <th scope="col" class="text-end">Acciones</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr th:each="cliente : ${clientes}">
+                            <tr th:each="cliente, iterStat : ${clientes}">
                                 <td th:text="${cliente.idCliente}">1</td>
                                 <td class="fw-semibold" th:text="${cliente.nombre + ' ' + cliente.apellidos}">Nombre Apellidos</td>
                                 <td th:text="${cliente.user != null ? cliente.user.username : '-'}">usuario</td>
@@ -47,9 +47,39 @@
                                 <td th:text="${cliente.telefono}">600 000 000</td>
                                 <td th:text="${cliente.ciudad}">Sevilla</td>
                                 <td th:text="${cliente.fechaRegistro}">2026-05-19</td>
-                                <td>
-                                    <span th:if="${cliente.activo}" class="badge text-bg-success">Activo</span>
-                                    <span th:unless="${cliente.activo}" class="badge text-bg-secondary">Inactivo</span>
+                                <td class="text-end">
+                                    <div class="btn-group btn-group-sm" role="group" aria-label="Acciones del cliente">
+                                        <a th:href="@{/admin/clientes/editar/{id}(id=${cliente.idCliente})}" class="btn btn-outline-primary">
+                                            <i class="bi bi-pencil-square"></i> Editar
+                                        </a>
+                                        <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" th:data-bs-target="${'#eliminarClienteModal' + iterStat.index}">
+                                            <i class="bi bi-trash"></i> Eliminar
+                                        </button>
+                                    </div>
+
+                                    <div class="modal fade text-start" th:id="${'eliminarClienteModal' + iterStat.index}" tabindex="-1" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title">Eliminar cliente</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <p class="mb-0">
+                                                        La eliminacion de clientes no esta disponible.
+                                                        <strong th:text="${cliente.nombre + ' ' + cliente.apellidos}">este cliente</strong>
+                                                        no se borrara.
+                                                    </p>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                                    <button type="button" class="btn btn-danger" disabled>
+                                                        <i class="bi bi-trash"></i> Terminar de borrar
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </td>
                             </tr>
                         </tbody>
