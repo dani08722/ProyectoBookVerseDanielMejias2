@@ -59,6 +59,9 @@
                                 <td th:text="${cliente.fechaRegistro}">2026-05-19</td>
                                 <td class="text-end">
                                     <div class="btn-group btn-group-sm" role="group" aria-label="Acciones del cliente">
+                                        <a th:href="@{/admin/clientes/{id}(id=${cliente.idCliente})}" class="btn btn-outline-secondary">
+                                            <i class="bi bi-eye"></i> Ver detalles
+                                        </a>
                                         <a th:href="@{/admin/clientes/editar/{id}(id=${cliente.idCliente})}" class="btn btn-outline-primary">
                                             <i class="bi bi-pencil-square"></i> Editar
                                         </a>

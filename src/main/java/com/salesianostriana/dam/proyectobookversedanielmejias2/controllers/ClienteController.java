@@ -47,6 +47,16 @@ public class ClienteController {
 		return "admin/form-cliente";
 	}
 
+	@GetMapping("/admin/clientes/{id}")
+	public String verDetalleCliente(@PathVariable Long id, Model model) {
+		return clienteService.findById(id)
+				.map(cliente -> {
+					model.addAttribute("cliente", cliente);
+					return "admin/detalle-cliente";
+				})
+				.orElse("redirect:/admin/clientes");
+	}
+
 	@GetMapping("/admin/clientes/editar/{id}")
 	public String mostrarFormularioEditar(@PathVariable Long id, Model model) {
 		return clienteService.findById(id)
