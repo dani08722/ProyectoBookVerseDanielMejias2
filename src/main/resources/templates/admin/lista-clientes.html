@@ -22,6 +22,16 @@
             </a>
         </div>
 
+        <div th:if="${mensajeExito}" class="alert alert-success d-flex align-items-center gap-2" role="alert">
+            <i class="bi bi-check-circle-fill"></i>
+            <span th:text="${mensajeExito}">Cliente eliminado correctamente.</span>
+        </div>
+
+        <div th:if="${mensajeError}" class="alert alert-danger d-flex align-items-center gap-2" role="alert">
+            <i class="bi bi-exclamation-triangle-fill"></i>
+            <span th:text="${mensajeError}">No se puede eliminar un cliente administrador.</span>
+        </div>
+
         <div class="card border-0 shadow-sm">
             <div class="card-body p-0">
                 <div class="table-responsive">
@@ -66,16 +76,18 @@
                                                 </div>
                                                 <div class="modal-body">
                                                     <p class="mb-0">
-                                                        La eliminacion de clientes no esta disponible.
+                                                        ¿Seguro que quieres eliminar
                                                         <strong th:text="${cliente.nombre + ' ' + cliente.apellidos}">este cliente</strong>
-                                                        no se borrara.
+                                                        ?
                                                     </p>
                                                 </div>
                                                 <div class="modal-footer">
                                                     <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
-                                                    <button type="button" class="btn btn-danger" disabled>
-                                                        <i class="bi bi-trash"></i> Terminar de borrar
-                                                    </button>
+                                                    <form th:action="@{/admin/clientes/eliminar/{id}(id=${cliente.idCliente})}" method="post">
+                                                        <button type="submit" class="btn btn-danger">
+                                                            <i class="bi bi-trash"></i> Terminar de borrar
+                                                        </button>
+                                                    </form>
                                                 </div>
                                             </div>
                                         </div>

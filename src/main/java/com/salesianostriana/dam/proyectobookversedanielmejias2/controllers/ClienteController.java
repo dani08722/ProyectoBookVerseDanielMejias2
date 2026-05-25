@@ -1,6 +1,7 @@
 package com.salesianostriana.dam.proyectobookversedanielmejias2.controllers;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -9,18 +10,22 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.salesianostriana.dam.proyectobookversedanielmejias2.models.Cliente;
 import com.salesianostriana.dam.proyectobookversedanielmejias2.models.User;
 import com.salesianostriana.dam.proyectobookversedanielmejias2.models.UserRole;
 import com.salesianostriana.dam.proyectobookversedanielmejias2.services.ClienteService;
+import com.salesianostriana.dam.proyectobookversedanielmejias2.services.PedidoService;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 @Controller @RequiredArgsConstructor
 public class ClienteController {
 
 	private final ClienteService clienteService;
+	private final PedidoService pedidoService;
 	private final PasswordEncoder passwordEncoder;
 	
 	
@@ -83,6 +88,24 @@ public class ClienteController {
 		return "redirect:/admin/clientes";
 	}
 
+	@Transactional
+	@PostMapping("/admin/clientes/eliminar/{id}")
+	public String eliminarCliente(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+		clienteService.findById(id)
+				.ifPresent(cliente -> {
+					//Si no es admin se elimina
+					if (cliente.getUser().getRole() != UserRole.ADMIN) {
+						new ArrayList<>(cliente.getPedidos()).forEach(pedidoService::delete);
+						clienteService.delete(cliente);
+						redirectAttributes.addFlashAttribute("mensajeExito", "Cliente eliminado correctamente.");
+					} else {
+						redirectAttributes.addFlashAttribute("mensajeError", "No se puede eliminar un cliente administrador.");
+					}
+				});
+
+		return "redirect:/admin/clientes";
+	}
+
 	
 	private void prepararUsuario(Cliente cliente) {
 		User user = cliente.getUser();
@@ -108,5 +131,4 @@ public class ClienteController {
 			user.setPassword(passwordEncoder.encode(password));
 		}
 	}
-
 }
