@@ -44,12 +44,10 @@
                     </div>
 
                     <div class="card-footer bg-transparent border-0 pb-3 pt-0 d-grid">
-                        <form th:action="@{/carrito/add}" method="post">
-                            <input type="hidden" name="isbn" th:value="${libro.isbn}">
-                            <button type="submit" class="btn btn-dark w-100 rounded-pill d-flex justify-content-center align-items-center gap-2">
-                                <i class="bi bi-cart-plus"></i> Añadir
-                            </button>
-                        </form>
+                        <a th:href="@{/productoACarrito/{isbn}(isbn=${libro.isbn})}"
+                           class="btn btn-dark w-100 rounded-pill d-flex justify-content-center align-items-center gap-2">
+                            <i class="bi bi-cart-plus"></i> Añadir
+                        </a>
                     </div>
                 </div>
             </div>

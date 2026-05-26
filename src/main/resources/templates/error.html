@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Error - BookVerse</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+</head>
+<body class="d-flex flex-column min-vh-100 bg-light">
+
+    <header th:replace="~{fragments/header :: header}"></header>
+
+    <main class="d-flex align-items-center py-5 flex-grow-1">
+        <div class="container">
+            <section class="card mx-auto border-0 shadow-sm rounded-3 p-4 p-md-5 text-center" style="max-width: 560px;">
+                <div class="rounded-circle bg-warning-subtle text-warning d-inline-flex align-items-center justify-content-center mx-auto mb-4" style="width: 5rem; height: 5rem;">
+                    <i class="bi bi-exclamation-triangle fs-1"></i>
+                </div>
+
+                <p class="text-warning fw-bold mb-2">Ha ocurrido un problema</p>
+                <h1 class="h3 fw-bold text-dark mb-3" th:text="${titulo != null ? titulo : 'Error'}">Error</h1>
+                <p class="text-secondary mb-4" th:text="${mensaje != null ? mensaje : 'No se ha podido completar la operacion.'}">
+                    No se ha podido completar la operacion.
+                </p>
+
+                <a th:href="${urlVolver != null ? urlVolver : '/catalogo'}" class="btn btn-primary btn-lg rounded-pill px-4">
+                    <i class="bi bi-arrow-left me-2"></i>
+                    <span th:text="${textoVolver != null ? textoVolver : 'Volver'}">Volver</span>
+                </a>
+            </section>
+        </div>
+    </main>
+
+    <footer th:replace="~{fragments/footer :: footer}"></footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

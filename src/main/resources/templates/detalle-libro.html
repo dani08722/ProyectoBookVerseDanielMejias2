@@ -95,13 +95,12 @@
                                 </div>
                             </div>
                         </div>
-
-                        <form th:action="@{/carrito/add}" method="post">
-                            <input type="hidden" name="isbn" th:value="${libro.isbn}">
-                            <button type="submit" class="btn btn-primary btn-lg rounded-pill px-5" th:disabled="${libro.stock == 0 || !libro.disponible}">
-                                <i class="bi bi-cart-plus window me-2"></i> Añadir al carrito
-                            </button>
-                        </form>
+                        <a th:href="@{/productoACarrito/{isbn}(isbn=${libro.isbn})}"
+                           class="btn btn-primary btn-lg rounded-pill px-5"
+                           th:classappend="${libro.stock == 0 || !libro.disponible} ? ' disabled'"
+                           th:aria-disabled="${libro.stock == 0 || !libro.disponible}">
+                            <i class="bi bi-cart-plus window me-2"></i> Añadir al carrito
+                        </a>
                     </div>
                 </div>
             </div>

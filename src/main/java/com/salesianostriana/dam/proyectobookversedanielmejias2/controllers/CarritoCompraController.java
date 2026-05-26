@@ -1,7 +1,5 @@
 package com.salesianostriana.dam.proyectobookversedanielmejias2.controllers;
 
-import java.util.NoSuchElementException;
-
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Controller;
@@ -10,6 +8,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.context.WebApplicationContext;
 
+import com.salesianostriana.dam.proyectobookversedanielmejias2.exception.LibroNoEncontradoException;
+import com.salesianostriana.dam.proyectobookversedanielmejias2.models.Libro;
 import com.salesianostriana.dam.proyectobookversedanielmejias2.services.CarritoCompraService;
 import com.salesianostriana.dam.proyectobookversedanielmejias2.services.LibroService;
 
@@ -25,14 +25,18 @@ public class CarritoCompraController {
 	
 	@GetMapping ("/carrito")
     public String showCarrito (Model model) {
-    	
-    	if (model.addAttribute("products",carritoCompraService.getProductosCarrito()) == null) 
-    			return "redirect:/";   	
+    	model.addAttribute("lineas", carritoCompraService.getLineasCarrito());
     		
     	return "carrito";
     }
 	
-	
-	
+	@GetMapping("/productoACarrito/{isbn}")
+	public String aniadirLibroAlCarrito(@PathVariable("isbn") String isbn) {
+		Libro libro = libroService.findById(isbn)
+				.orElseThrow(() -> new LibroNoEncontradoException(isbn));
+		
+		carritoCompraService.addProducto(libro);
+		return "redirect:/carrito";
+	}
 	
 }
