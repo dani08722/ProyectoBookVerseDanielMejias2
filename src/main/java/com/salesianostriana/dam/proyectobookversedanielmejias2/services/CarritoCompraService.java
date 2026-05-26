@@ -43,10 +43,29 @@ public class CarritoCompraService extends BaseServiceImpl<Libro, String, LibroRe
 					.build());
 		}
 	}
+
+	public void restarProducto(String isbn) {
+		buscarLineaPorIsbn(isbn)
+				.ifPresent(linea -> {
+					if (linea.getCantidad() > 1) {
+						linea.setCantidad(linea.getCantidad() - 1);
+					} else {
+						lineas.remove(linea);
+					}
+				});
+	}
+
+	public void eliminarProducto(String isbn) {
+		lineas.removeIf(linea -> linea.getLibro().getIsbn().equals(isbn));
+	}
 	
 	private Optional<LineaPedido> buscarLineaPorLibro(Libro libro) {
+		return buscarLineaPorIsbn(libro.getIsbn());
+	}
+
+	private Optional<LineaPedido> buscarLineaPorIsbn(String isbn) {
 		return lineas.stream()
-				.filter(linea -> linea.getLibro().getIsbn().equals(libro.getIsbn()))
+				.filter(linea -> linea.getLibro().getIsbn().equals(isbn))
 				.findFirst();
 	}
 	
