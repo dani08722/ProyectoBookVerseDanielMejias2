@@ -52,5 +52,11 @@ public class CarritoCompraController {
 		carritoCompraService.eliminarProducto(isbn);
 		return "redirect:/carrito";
 	}
+
+	@PostMapping("/carrito/vaciar")
+	public String vaciarCarrito() {
+		carritoCompraService.vaciarCarrito();
+		return "redirect:/carrito";
+	}
 	
 }

@@ -44,6 +44,10 @@
                     </div>
 
                     <div class="card-footer bg-transparent border-0 pb-3 pt-0 d-grid">
+                        <a th:href="@{/libros/{isbn}(isbn=${libro.isbn})}"
+                           class="btn btn-outline-dark btn-sm rounded-pill mb-2">
+                            Ver detalle
+                        </a>
                         <a th:href="@{/productoACarrito/{isbn}(isbn=${libro.isbn})}"
                            class="btn btn-dark w-100 rounded-pill d-flex justify-content-center align-items-center gap-2">
                             <i class="bi bi-cart-plus"></i> Añadir
