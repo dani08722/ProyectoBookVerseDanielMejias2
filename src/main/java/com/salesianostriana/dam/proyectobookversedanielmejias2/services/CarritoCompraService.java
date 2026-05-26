@@ -58,6 +58,10 @@ public class CarritoCompraService extends BaseServiceImpl<Libro, String, LibroRe
 	public void eliminarProducto(String isbn) {
 		lineas.removeIf(linea -> linea.getLibro().getIsbn().equals(isbn));
 	}
+
+	public void vaciarCarrito() {
+		lineas.clear();
+	}
 	
 	private Optional<LineaPedido> buscarLineaPorLibro(Libro libro) {
 		return buscarLineaPorIsbn(libro.getIsbn());
