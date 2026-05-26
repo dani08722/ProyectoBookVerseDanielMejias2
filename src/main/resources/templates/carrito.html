@@ -23,7 +23,7 @@
             </a>
         </div>
 
-        <div th:if="${products == null or products.isEmpty()}" class="card border-0 shadow-sm">
+        <div th:if="${lineas == null or lineas.isEmpty()}" class="card border-0 shadow-sm">
             <div class="card-body text-center py-5">
                 <i class="bi bi-cart-x display-4 text-muted"></i>
                 <h2 class="h4 fw-bold mt-3">Tu carrito esta vacio</h2>
@@ -34,7 +34,7 @@
             </div>
         </div>
 
-        <div th:unless="${products == null or products.isEmpty()}" class="row g-4">
+        <div th:unless="${lineas == null or lineas.isEmpty()}" class="row g-4">
             <section class="col-lg-8">
                 <div class="card border-0 shadow-sm">
                     <div class="card-header bg-white py-3">
@@ -42,54 +42,52 @@
                     </div>
 
                     <div class="list-group list-group-flush">
-                        <article class="list-group-item p-3" th:each="item : ${products}">
+                        <article class="list-group-item p-3" th:each="linea : ${lineas}">
                             <div class="row g-3 align-items-center">
                                 <div class="col-3 col-md-2">
-                                    <img th:src="${item.key.imagenUrl != null ? item.key.imagenUrl : 'https://via.placeholder.com/120x160?text=Sin+Portada'}"
+                                    <img th:src="${linea.libro.imagenUrl != null ? linea.libro.imagenUrl : 'https://via.placeholder.com/120x160?text=Sin+Portada'}"
                                          class="img-fluid rounded shadow-sm"
-                                         th:alt="${'Portada de ' + item.key.titulo}">
+                                         th:alt="${'Portada de ' + linea.libro.titulo}">
                                 </div>
 
                                 <div class="col-9 col-md-4">
-                                    <h3 class="h6 fw-bold mb-1" th:text="${item.key.titulo}">Titulo del libro</h3>
-                                    <p class="text-muted small mb-1" th:text="${item.key.autor}">Autor</p>
-                                    <span class="badge bg-secondary-subtle text-secondary" th:text="${item.key.genero}">Genero</span>
+                                    <h3 class="h6 fw-bold mb-1" th:text="${linea.libro.titulo}">Titulo del libro</h3>
+                                    <p class="text-muted small mb-1" th:text="${linea.libro.autor}">Autor</p>
+                                    <span class="badge bg-secondary-subtle text-secondary" th:text="${linea.libro.genero}">Genero</span>
                                 </div>
 
                                 <div class="col-6 col-md-2">
                                     <span class="text-muted small d-block">Precio</span>
-                                    <span class="fw-semibold" th:text="${#numbers.formatDecimal(item.key.precio, 1, 2)} + ' EUR'">19.99 EUR</span>
+                                    <span class="fw-semibold" th:text="${#numbers.formatDecimal(linea.precioUnitario, 1, 2)} + ' EUR'">19.99 EUR</span>
                                 </div>
 
                                 <div class="col-6 col-md-2">
                                     <span class="text-muted small d-block">Cantidad</span>
                                     <div class="d-flex align-items-center gap-2">
                                         <form th:action="@{/carrito/restar}" method="post">
-                                            <input type="hidden" name="isbn" th:value="${item.key.isbn}">
+                                            <input type="hidden" name="isbn" th:value="${linea.libro.isbn}">
                                             <button type="submit" class="btn btn-outline-secondary btn-sm" aria-label="Restar unidad">
                                                 <i class="bi bi-dash"></i>
                                             </button>
                                         </form>
 
-                                        <span class="fw-bold text-center" style="min-width: 2rem;" th:text="${item.value}">1</span>
-
-                                        <form th:action="@{/carrito/add}" method="post">
-                                            <input type="hidden" name="isbn" th:value="${item.key.isbn}">
-                                            <button type="submit" class="btn btn-outline-secondary btn-sm" aria-label="Sumar unidad">
-                                                <i class="bi bi-plus"></i>
-                                            </button>
-                                        </form>
+                                        <span class="fw-bold text-center" style="min-width: 2rem;" th:text="${linea.cantidad}">1</span>
+                                        <a th:href="@{/productoACarrito/{isbn}(isbn=${linea.libro.isbn})}"
+                                           class="btn btn-outline-secondary btn-sm"
+                                           aria-label="Sumar unidad">
+                                            <i class="bi bi-plus"></i>
+                                        </a>
                                     </div>
                                 </div>
 
                                 <div class="col-8 col-md-1">
                                     <span class="text-muted small d-block">Subtotal</span>
-                                    <span class="fw-bold text-primary" th:text="${#numbers.formatDecimal(item.key.precio * item.value, 1, 2)} + ' EUR'">19.99 EUR</span>
+                                    <span class="fw-bold text-primary" th:text="${#numbers.formatDecimal(linea.subtotal, 1, 2)} + ' EUR'">19.99 EUR</span>
                                 </div>
 
                                 <div class="col-4 col-md-1 text-end">
                                     <form th:action="@{/carrito/eliminar}" method="post">
-                                        <input type="hidden" name="isbn" th:value="${item.key.isbn}">
+                                        <input type="hidden" name="isbn" th:value="${linea.libro.isbn}">
                                         <button type="submit" class="btn btn-outline-danger btn-sm" aria-label="Eliminar libro">
                                             <i class="bi bi-trash"></i>
                                         </button>
@@ -109,14 +107,13 @@
                     <div class="card-body">
                         <div class="d-flex justify-content-between mb-2">
                             <span class="text-muted">Articulos</span>
-                            <span class="fw-semibold" th:text="${#aggregates.sum(products.values())}">1</span>
+                            <span class="fw-semibold" th:text="${@carritoCompraService.cantidadTotal()}">1</span>
                         </div>
 
                         <div class="d-flex justify-content-between mb-3">
                             <span class="text-muted">Subtotal</span>
                             <span class="fw-semibold"
-                                  th:with="total=${#aggregates.sum(products.entrySet().![key.precio * value])}"
-                                  th:text="${#numbers.formatDecimal(total, 1, 2)} + ' EUR'">19.99 EUR</span>
+                                  th:text="${#numbers.formatDecimal(@carritoCompraService.total(), 1, 2)} + ' EUR'">19.99 EUR</span>
                         </div>
 
                         <hr>
@@ -124,8 +121,7 @@
                         <div class="d-flex justify-content-between align-items-center mb-4">
                             <span class="h5 fw-bold mb-0">Total</span>
                             <span class="h4 fw-bold text-primary mb-0"
-                                  th:with="total=${#aggregates.sum(products.entrySet().![key.precio * value])}"
-                                  th:text="${#numbers.formatDecimal(total, 1, 2)} + ' EUR'">19.99 EUR</span>
+                                  th:text="${#numbers.formatDecimal(@carritoCompraService.total(), 1, 2)} + ' EUR'">19.99 EUR</span>
                         </div>
 
                         <div class="d-grid gap-2">
