@@ -13,13 +13,15 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class MainController {
 
+	private static final int NUM_PRODUCTOS_ALEATORIOS = 4;
+
 	private final ClienteRepository clienteRepo;
 	private final LibroService libroService;
 
 	@GetMapping({"/", "/index"})
 	public String index(Model model) {
 		model.addAttribute("Clientes", clienteRepo.findAll());
-		model.addAttribute("librosDestacados", libroService.findAll());
+		model.addAttribute("librosDestacados", libroService.obtenerLibrosAleatorios(NUM_PRODUCTOS_ALEATORIOS));
 		return "index";
 	}
 
