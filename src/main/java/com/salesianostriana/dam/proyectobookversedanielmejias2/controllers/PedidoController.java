@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -33,6 +34,18 @@ public class PedidoController {
 	public String listarPedidos(Model model) {
 		model.addAttribute("pedidos", pedidoService.findAll());
 		return "admin/lista-pedidos";
+	}
+	
+	
+	
+	@GetMapping("/admin/pedidos/{id}")
+	public String verDetallePedido(@PathVariable Long id, Model model) {
+		return pedidoService.findById(id)
+				.map(pedido -> {
+					model.addAttribute("pedido", pedido);
+					return "admin/detalle-pedido";
+				})
+				.orElse("redirect:/admin/pedidos");
 	}
 
 	
