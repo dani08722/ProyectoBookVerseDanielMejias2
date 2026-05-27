@@ -10,10 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.context.WebApplicationContext;
 
-import com.salesianostriana.dam.proyectobookversedanielmejias2.exception.LibroNoEncontradoException;
-import com.salesianostriana.dam.proyectobookversedanielmejias2.models.Libro;
 import com.salesianostriana.dam.proyectobookversedanielmejias2.services.CarritoCompraService;
-import com.salesianostriana.dam.proyectobookversedanielmejias2.services.LibroService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -21,8 +18,6 @@ import lombok.RequiredArgsConstructor;
 @Scope (value = WebApplicationContext.SCOPE_SESSION, proxyMode = ScopedProxyMode.TARGET_CLASS)
 public class CarritoCompraController {
 
-	private final LibroService libroService;
-	
 	private final CarritoCompraService carritoCompraService;
 	
 	@GetMapping ("/carrito")
@@ -34,10 +29,7 @@ public class CarritoCompraController {
 	
 	@GetMapping("/productoACarrito/{isbn}")
 	public String aniadirLibroAlCarrito(@PathVariable("isbn") String isbn) {
-		Libro libro = libroService.findById(isbn)
-				.orElseThrow(() -> new LibroNoEncontradoException(isbn));
-		
-		carritoCompraService.addProducto(libro);
+		carritoCompraService.addProducto(isbn);
 		return "redirect:/carrito";
 	}
 

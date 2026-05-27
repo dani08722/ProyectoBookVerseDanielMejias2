@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.context.WebApplicationContext;
 
 import com.salesianostriana.dam.proyectobookversedanielmejias2.exception.StockInsuficienteException;
+import com.salesianostriana.dam.proyectobookversedanielmejias2.exception.LibroNoEncontradoException;
 import com.salesianostriana.dam.proyectobookversedanielmejias2.models.LineaPedido;
 import com.salesianostriana.dam.proyectobookversedanielmejias2.repository.LibroRepository;
 import com.salesianostriana.dam.proyectobookversedanielmejias2.services.base.BaseServiceImpl;
@@ -21,6 +22,12 @@ import com.salesianostriana.dam.proyectobookversedanielmejias2.models.Libro;
 public class CarritoCompraService extends BaseServiceImpl<Libro, String, LibroRepository>{
 
 	private List<LineaPedido> lineas = new ArrayList<>();
+
+	public void addProducto(String isbn) {
+		Libro libro = findById(isbn)
+				.orElseThrow(() -> new LibroNoEncontradoException(isbn));
+		addProducto(libro);
+	}
 	
 	public void addProducto (Libro l) {
 		Optional<LineaPedido> lineaExistente = buscarLineaPorLibro(l);

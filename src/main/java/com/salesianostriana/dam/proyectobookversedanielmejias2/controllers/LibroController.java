@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 import com.salesianostriana.dam.proyectobookversedanielmejias2.models.Libro;
 import com.salesianostriana.dam.proyectobookversedanielmejias2.services.LibroService;
-import com.salesianostriana.dam.proyectobookversedanielmejias2.services.LineaPedidoService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -19,7 +18,6 @@ import lombok.RequiredArgsConstructor;
 public class LibroController {
 
 	private final LibroService libroService;
-	private final LineaPedidoService lineaPedidoService;
 	
 	
 	@GetMapping("/catalogo")
@@ -81,14 +79,7 @@ public class LibroController {
 	
 	@PostMapping("/admin/libros/eliminar/{isbn}")
 	public String eliminarLibro(@PathVariable String isbn) {
-		
-		Optional<Libro> libro = libroService.findById(isbn);
-
-		if (libro.isPresent()) {
-			lineaPedidoService.deleteByIsbn(isbn);
-			libroService.delete(libro.get());
-		}
-
+		libroService.eliminarLibro(isbn);
 		return "redirect:/admin/libros";
 	}
 
