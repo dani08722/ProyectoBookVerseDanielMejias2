@@ -64,6 +64,7 @@
                                 <th scope="col">Pago</th>
                                 <th scope="col">Direccion envio</th>
                                 <th scope="col" class="text-end">Total</th>
+                                <th scope="col" class="text-end">Acciones</th>
                             </tr>
                         </thead>
                         <tbody id="tablaPedidos">
@@ -85,6 +86,11 @@
                                 <td th:text="${pedido.metodoPago}">Tarjeta</td>
                                 <td class="text-truncate" style="max-width: 260px;" th:text="${pedido.direccionEnvio}">Direccion</td>
                                 <td class="text-end fw-bold" th:text="${#numbers.formatDecimal(pedido.total, 1, 2)} + ' EUR'">59.99 EUR</td>
+                                <td class="text-end">
+                                    <a th:href="@{/admin/pedidos/{id}(id=${pedido.idPedido})}" class="btn btn-outline-secondary btn-sm">
+                                        <i class="bi bi-eye"></i> Ver detalles
+                                    </a>
+                                </td>
                             </tr>
                         </tbody>
                     </table>
