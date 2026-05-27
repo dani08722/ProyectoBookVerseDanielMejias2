@@ -2,6 +2,7 @@ package com.salesianostriana.dam.proyectobookversedanielmejias2.services;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Optional;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -23,6 +24,8 @@ public class ClienteService extends BaseServiceImpl<Cliente, Long, ClienteReposi
 	private final PasswordEncoder passwordEncoder;
 	private final PedidoRepository pedidoRepository;
 
+	
+	
 	public Cliente nuevoCliente() {
 		Cliente cliente = new Cliente();
 		cliente.setActivo(true);
@@ -32,6 +35,8 @@ public class ClienteService extends BaseServiceImpl<Cliente, Long, ClienteReposi
 		return cliente;
 	}
 
+	
+	
 	public Cliente prepararClienteParaFormulario(Cliente cliente) {
 		if (cliente.getUser() == null) {
 			cliente.setUser(User.builder()
@@ -42,6 +47,14 @@ public class ClienteService extends BaseServiceImpl<Cliente, Long, ClienteReposi
 		return cliente;
 	}
 
+	
+	
+	public Optional<Cliente> buscarPorUsername(String username) {
+		return repository.findByUserUsername(username);
+	}
+
+	
+	
 	public Cliente guardarCliente(Cliente cliente) {
 		if (cliente.getIdCliente() == null) {
 			cliente.setFechaRegistro(LocalDate.now());
@@ -55,6 +68,8 @@ public class ClienteService extends BaseServiceImpl<Cliente, Long, ClienteReposi
 		return save(cliente);
 	}
 
+	
+	
 	@Transactional
 	public boolean eliminarCliente(Long id) {
 		return findById(id)
@@ -70,6 +85,8 @@ public class ClienteService extends BaseServiceImpl<Cliente, Long, ClienteReposi
 				.orElse(false);
 	}
 
+	
+	
 	private void mantenerDatosNoEditables(Cliente cliente, Cliente clienteExistente) {
 		//Mantenemos la fecha de registro y el estado activo originales del cliente
 		cliente.setFechaRegistro(clienteExistente.getFechaRegistro());
@@ -87,6 +104,8 @@ public class ClienteService extends BaseServiceImpl<Cliente, Long, ClienteReposi
 		}
 	}
 
+	
+	
 	private void prepararUsuario(Cliente cliente) {
 		User user = cliente.getUser();
 		String password;

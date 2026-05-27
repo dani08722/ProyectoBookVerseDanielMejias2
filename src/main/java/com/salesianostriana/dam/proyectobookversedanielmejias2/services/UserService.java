@@ -12,6 +12,8 @@ import com.salesianostriana.dam.proyectobookversedanielmejias2.services.base.Bas
 @Service
 public class UserService extends BaseServiceImpl<User, Long, UserRepository> implements UserDetailsService {
 
+	
+	
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		return repository.findFirstByUsername(username)

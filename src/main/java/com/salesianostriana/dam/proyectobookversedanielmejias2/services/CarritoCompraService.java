@@ -29,6 +29,8 @@ public class CarritoCompraService extends BaseServiceImpl<Libro, String, LibroRe
 		addProducto(libro);
 	}
 	
+	
+	
 	public void addProducto (Libro l) {
 		Optional<LineaPedido> lineaExistente = buscarLineaPorLibro(l);
 		int cantidadActual = lineaExistente
@@ -51,6 +53,8 @@ public class CarritoCompraService extends BaseServiceImpl<Libro, String, LibroRe
 		}
 	}
 
+	
+	
 	public void restarProducto(String isbn) {
 		buscarLineaPorIsbn(isbn)
 				.ifPresent(linea -> {
@@ -62,33 +66,47 @@ public class CarritoCompraService extends BaseServiceImpl<Libro, String, LibroRe
 				});
 	}
 
+	
+	
 	public void eliminarProducto(String isbn) {
 		lineas.removeIf(linea -> linea.getLibro().getIsbn().equals(isbn));
 	}
 
+	
+	
 	public void vaciarCarrito() {
 		lineas.clear();
 	}
+	
+	
 	
 	private Optional<LineaPedido> buscarLineaPorLibro(Libro libro) {
 		return buscarLineaPorIsbn(libro.getIsbn());
 	}
 
+	
+	
 	private Optional<LineaPedido> buscarLineaPorIsbn(String isbn) {
 		return lineas.stream()
 				.filter(linea -> linea.getLibro().getIsbn().equals(isbn))
 				.findFirst();
 	}
 	
+	
+	
 	public List<LineaPedido> getLineasCarrito() {
         return Collections.unmodifiableList(lineas);
     }
+	
+	
 	
 	public long cantidadTotal() {
 		return lineas.stream()
 				.mapToLong(LineaPedido::getCantidad)
 				.sum();
 	}
+	
+	
 	
 	public double total() {
 		return lineas.stream()

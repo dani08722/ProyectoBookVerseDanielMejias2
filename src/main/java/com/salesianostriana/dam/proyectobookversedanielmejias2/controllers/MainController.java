@@ -18,6 +18,8 @@ public class MainController {
 	private final ClienteService clienteService;
 	private final LibroService libroService;
 
+	
+	
 	@GetMapping({"/", "/index"})
 	public String index(Model model) {
 		model.addAttribute("Clientes", clienteService.findAll());
@@ -25,11 +27,15 @@ public class MainController {
 		return "index";
 	}
 
+	
+	
 	@GetMapping("/acceso-denegado")
 	public String accesoDenegado() {
 		return "acceso-denegado";
 	}
 
+	
+	
 	@GetMapping("/registro")
 	public String registroNoDisponible() {
 		return "registro";

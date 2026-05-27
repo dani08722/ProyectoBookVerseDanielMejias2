@@ -27,12 +27,16 @@ public class PedidoController {
 	private final ClienteService clienteService;
 	private final LibroService libroService;
 
+	
+	
 	@GetMapping("/admin/pedidos")
 	public String listarPedidos(Model model) {
 		model.addAttribute("pedidos", pedidoService.findAll());
 		return "admin/lista-pedidos";
 	}
 
+	
+	
 	@GetMapping("/admin/pedidos/crear")
 	public String mostrarFormularioCrear(Model model) {
 		Pedido pedido = new Pedido();
@@ -46,6 +50,8 @@ public class PedidoController {
 		return "admin/form-pedidos";
 	}
 
+	
+	
 	@PostMapping("/admin/pedidos/submit")
 	public String crearPedido(@ModelAttribute("pedido") Pedido pedido,
 			@RequestParam("clienteId") Long clienteId,

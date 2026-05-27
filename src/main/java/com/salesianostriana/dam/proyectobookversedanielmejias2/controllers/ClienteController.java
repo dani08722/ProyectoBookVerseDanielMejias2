@@ -19,11 +19,15 @@ public class ClienteController {
 
 	private final ClienteService clienteService;
 
+	
+	
 	@GetMapping("/admin/clientes")
 	public String listarClientes(Model model) {
 		model.addAttribute("clientes", clienteService.findAll());
 		return "admin/lista-clientes";
 	}
+	
+	
 
 	@GetMapping("/admin/clientes/crear")
 	public String mostrarFormularioCrear(Model model) {
@@ -31,6 +35,8 @@ public class ClienteController {
 		return "admin/form-cliente";
 	}
 
+	
+	
 	@GetMapping("/admin/clientes/{id}")
 	public String verDetalleCliente(@PathVariable Long id, Model model) {
 		return clienteService.findById(id)
@@ -41,6 +47,8 @@ public class ClienteController {
 				.orElse("redirect:/admin/clientes");
 	}
 
+	
+	
 	@GetMapping("/admin/clientes/editar/{id}")
 	public String mostrarFormularioEditar(@PathVariable Long id, Model model) {
 		return clienteService.findById(id)
@@ -51,12 +59,16 @@ public class ClienteController {
 				.orElse("redirect:/admin/clientes");
 	}
 
+	
+	
 	@PostMapping("/admin/clientes/submit")
 	public String crearCliente(@ModelAttribute("cliente") Cliente cliente) {
 		clienteService.guardarCliente(cliente);
 		return "redirect:/admin/clientes";
 	}
 
+	
+	
 	@PostMapping("/admin/clientes/eliminar/{id}")
 	public String eliminarCliente(@PathVariable Long id, RedirectAttributes redirectAttributes) {
 		if (clienteService.eliminarCliente(id)) {

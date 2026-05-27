@@ -42,11 +42,13 @@ public class LibroController {
 	}
 	
 
+	
 	@GetMapping("/admin/libros/crear")
 	public String mostrarFormularioCrear(Model model) {
 		model.addAttribute("libro", new Libro());
 		return "admin/form-libro";
 	}
+	
 	
 	
 	@PostMapping("/admin/libros/submit")
@@ -56,12 +58,14 @@ public class LibroController {
 	}
 	
 			
+	
 	@GetMapping("/admin/libros")
 	public String listarLibrosAdmin(Model model) {
 		model.addAttribute("libros", libroService.findAll());
 		return "admin/lista-libros";
 	}
 
+	
 	
 	@GetMapping("/admin/libros/editar/{isbn}")
 	public String mostrarFormularioEditar(@PathVariable String isbn, Model model) {
@@ -76,6 +80,7 @@ public class LibroController {
 		return "redirect:/admin/libros";
 	}
 
+	
 	
 	@PostMapping("/admin/libros/eliminar/{isbn}")
 	public String eliminarLibro(@PathVariable String isbn) {

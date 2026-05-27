@@ -18,6 +18,8 @@ public class LibroService extends BaseServiceImpl<Libro, String, LibroRepository
 
 	private final LineaPedidoService lineaPedidoService;
 
+	
+	
 	public List<Libro> obtenerLibrosAleatorios(int numero) {
 		List<String> listaIds = repository.obtenerIds();
 		Collections.shuffle(listaIds);
@@ -25,6 +27,8 @@ public class LibroService extends BaseServiceImpl<Libro, String, LibroRepository
 		return repository.findAllById(listaIds);
 	}
 
+	
+	
 	public void eliminarLibro(String isbn) {
 		findById(isbn)
 				.ifPresent(libro -> {

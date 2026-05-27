@@ -3,9 +3,11 @@ package com.salesianostriana.dam.proyectobookversedanielmejias2.services;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
+import com.salesianostriana.dam.proyectobookversedanielmejias2.models.Cliente;
 import com.salesianostriana.dam.proyectobookversedanielmejias2.models.Libro;
 import com.salesianostriana.dam.proyectobookversedanielmejias2.models.LineaPedido;
 import com.salesianostriana.dam.proyectobookversedanielmejias2.models.Pedido;
@@ -13,6 +15,7 @@ import com.salesianostriana.dam.proyectobookversedanielmejias2.models.EstadoPedi
 import com.salesianostriana.dam.proyectobookversedanielmejias2.repository.PedidoRepository;
 import com.salesianostriana.dam.proyectobookversedanielmejias2.services.base.BaseServiceImpl;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -22,6 +25,9 @@ public class PedidoService extends BaseServiceImpl<Pedido, Long, PedidoRepositor
 	private final ClienteService clienteService;
 	private final LibroService libroService;
 
+	
+	
+	
 	public Pedido nuevoPedido() {
 		Pedido pedido = new Pedido();
 		pedido.setFecha(LocalDate.now());
@@ -32,7 +38,10 @@ public class PedidoService extends BaseServiceImpl<Pedido, Long, PedidoRepositor
 	public EstadoPedido[] obtenerEstados() {
 		return EstadoPedido.values();
 	}
-
+	
+	
+	
+	@Transactional
 	public boolean crearPedido(Pedido pedido, Long clienteId, List<String> isbns, List<Integer> cantidades) {
 		List<LineaPedido> lineasPedido = crearLineasPedido(pedido, isbns, cantidades);
 
@@ -62,7 +71,60 @@ public class PedidoService extends BaseServiceImpl<Pedido, Long, PedidoRepositor
 		save(pedido);
 		return true;
 	}
+	
+	
 
+	@Transactional
+	public boolean crearPedidoDesdeCarrito(String username, List<LineaPedido> lineasCarrito) {
+		
+		//Si el carrito es nulo o está vacío no se puede procesar el pedido y devuelve false
+		if (lineasCarrito == null || lineasCarrito.isEmpty()) {
+			return false;
+		}
+		
+		
+		
+		//Buscamos al cliente por su username para procesar la compra y lo devolvemos
+		return clienteService.buscarPorUsername(username)
+				.map(cliente -> {
+					//Inicializamos un nuevo pedido con datos por defecto
+					Pedido pedido = nuevoPedido();
+					pedido.setMetodoPago("Pendiente");
+					pedido.setDireccionEnvio(crearDireccionEnvio(cliente));
+					
+					//Extraemos todos los ISBNs de los libros que están en el carrito
+					List<String> isbns = lineasCarrito.stream()
+							.map(linea -> linea.getLibro().getIsbn())
+							.collect(Collectors.toList());
+					
+					//Extraemos las cantidades de cada libro del carrito
+					List<Integer> cantidades = lineasCarrito.stream()
+							.map(LineaPedido::getCantidad)
+							.collect(Collectors.toList());
+					
+					//Llamamos al método principal para crear y validar el pedido final
+					return crearPedido(pedido, cliente.getIdCliente(), isbns, cantidades);
+				})
+				//Si no hay cliente directamente devuelve false
+				.orElse(false);
+	}
+	
+	
+
+	private String crearDireccionEnvio(Cliente cliente) {
+		//Creo una lista para poner las direcciones
+		List<String> partesDireccion = new ArrayList<>();
+			
+			//Añado a la lista la direccion
+			partesDireccion.add(cliente.getDireccion());
+			//Añado a la lista la ciudad
+			partesDireccion.add(cliente.getCiudad());
+		
+		//Unimos las partes de la dirección
+		return String.join(", ", partesDireccion);
+	}
+
+	
 	
 	private List<LineaPedido> crearLineasPedido(Pedido pedido, List<String> isbns, List<Integer> cantidades) {
 		//Inicializamos la lista de lineas de pedido vacia
@@ -91,6 +153,8 @@ public class PedidoService extends BaseServiceImpl<Pedido, Long, PedidoRepositor
 		return lineasPedido;
 	}
 
+	
+	
 	//Mira todas las lineas de pedido para ver si la cantidad del pedido es mayor del stock
 	private boolean hayStockSuficiente(List<LineaPedido> lineasPedido) {
 		for (LineaPedido linea : lineasPedido) {
@@ -102,6 +166,8 @@ public class PedidoService extends BaseServiceImpl<Pedido, Long, PedidoRepositor
 		return true;
 	}
 
+	
+	
 	//Resta al stock de la tienda la cantidad de libros que hemos comprado
 	private void descontarStock(List<LineaPedido> lineasPedido) {
 		for (LineaPedido linea : lineasPedido) {
