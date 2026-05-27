@@ -10,6 +10,7 @@ import com.salesianostriana.dam.proyectobookversedanielmejias2.models.Libro;
 import com.salesianostriana.dam.proyectobookversedanielmejias2.repository.LibroRepository;
 import com.salesianostriana.dam.proyectobookversedanielmejias2.services.base.BaseServiceImpl;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -28,7 +29,7 @@ public class LibroService extends BaseServiceImpl<Libro, String, LibroRepository
 	}
 
 	
-	
+	@Transactional
 	public void eliminarLibro(String isbn) {
 		findById(isbn)
 				.ifPresent(libro -> {
