@@ -23,6 +23,16 @@
             </a>
         </div>
 
+        <div th:if="${mensajeExito}" class="alert alert-success d-flex align-items-center gap-2" role="alert">
+            <i class="bi bi-check-circle-fill"></i>
+            <span th:text="${mensajeExito}">Pedido creado correctamente.</span>
+        </div>
+
+        <div th:if="${mensajeError}" class="alert alert-danger d-flex align-items-center gap-2" role="alert">
+            <i class="bi bi-exclamation-triangle-fill"></i>
+            <span th:text="${mensajeError}">No se ha podido crear el pedido.</span>
+        </div>
+
         <div th:if="${lineas == null or lineas.isEmpty()}" class="card border-0 shadow-sm">
             <div class="card-body text-center py-5">
                 <i class="bi bi-cart-x display-4 text-muted"></i>

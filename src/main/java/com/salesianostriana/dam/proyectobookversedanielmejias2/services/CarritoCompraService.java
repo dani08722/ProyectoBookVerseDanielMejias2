@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.context.WebApplicationContext;
 
 import com.salesianostriana.dam.proyectobookversedanielmejias2.exception.StockInsuficienteException;
+import com.salesianostriana.dam.proyectobookversedanielmejias2.exception.LibroNoEncontradoException;
 import com.salesianostriana.dam.proyectobookversedanielmejias2.models.LineaPedido;
 import com.salesianostriana.dam.proyectobookversedanielmejias2.repository.LibroRepository;
 import com.salesianostriana.dam.proyectobookversedanielmejias2.services.base.BaseServiceImpl;
@@ -21,6 +22,14 @@ import com.salesianostriana.dam.proyectobookversedanielmejias2.models.Libro;
 public class CarritoCompraService extends BaseServiceImpl<Libro, String, LibroRepository>{
 
 	private List<LineaPedido> lineas = new ArrayList<>();
+
+	public void addProducto(String isbn) {
+		Libro libro = findById(isbn)
+				.orElseThrow(() -> new LibroNoEncontradoException(isbn));
+		addProducto(libro);
+	}
+	
+	
 	
 	public void addProducto (Libro l) {
 		Optional<LineaPedido> lineaExistente = buscarLineaPorLibro(l);
@@ -44,6 +53,8 @@ public class CarritoCompraService extends BaseServiceImpl<Libro, String, LibroRe
 		}
 	}
 
+	
+	
 	public void restarProducto(String isbn) {
 		buscarLineaPorIsbn(isbn)
 				.ifPresent(linea -> {
@@ -55,33 +66,47 @@ public class CarritoCompraService extends BaseServiceImpl<Libro, String, LibroRe
 				});
 	}
 
+	
+	
 	public void eliminarProducto(String isbn) {
 		lineas.removeIf(linea -> linea.getLibro().getIsbn().equals(isbn));
 	}
 
+	
+	
 	public void vaciarCarrito() {
 		lineas.clear();
 	}
+	
+	
 	
 	private Optional<LineaPedido> buscarLineaPorLibro(Libro libro) {
 		return buscarLineaPorIsbn(libro.getIsbn());
 	}
 
+	
+	
 	private Optional<LineaPedido> buscarLineaPorIsbn(String isbn) {
 		return lineas.stream()
 				.filter(linea -> linea.getLibro().getIsbn().equals(isbn))
 				.findFirst();
 	}
 	
+	
+	
 	public List<LineaPedido> getLineasCarrito() {
         return Collections.unmodifiableList(lineas);
     }
+	
+	
 	
 	public long cantidadTotal() {
 		return lineas.stream()
 				.mapToLong(LineaPedido::getCantidad)
 				.sum();
 	}
+	
+	
 	
 	public double total() {
 		return lineas.stream()
