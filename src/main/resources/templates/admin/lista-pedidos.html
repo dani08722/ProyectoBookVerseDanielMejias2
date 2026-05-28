@@ -74,7 +74,7 @@
                                 th:data-estado="${pedido.estado}"
                                 th:data-busqueda="${pedido.codigo + ' ' + (pedido.cliente != null ? pedido.cliente.nombre + ' ' + pedido.cliente.apellidos + ' ' + pedido.cliente.email : '') + ' ' + pedido.direccionEnvio}">
                                 <td class="fw-semibold" th:text="${pedido.codigo}">PED-001</td>
-                                <td th:text="${pedido.fecha}">2026-05-10</td>
+                                <td th:text="${#temporals.format(pedido.fecha,'dd/MM/yyyy')}">2026-05-10</td>
                                 <td>
                                     <span th:if="${pedido.cliente != null}" th:text="${pedido.cliente.nombre + ' ' + pedido.cliente.apellidos}">Cliente</span>
                                     <span th:unless="${pedido.cliente != null}" class="text-muted">Sin cliente</span>
@@ -89,9 +89,14 @@
                                 <td class="text-truncate" style="max-width: 260px;" th:text="${pedido.direccionEnvio}">Direccion</td>
                                 <td class="text-end fw-bold" th:text="${#numbers.formatDecimal(pedido.total, 1, 2)} + ' EUR'">59.99 EUR</td>
                                 <td class="text-end">
-                                    <a th:href="@{/admin/pedidos/{id}(id=${pedido.idPedido})}" class="btn btn-outline-secondary btn-sm">
-                                        <i class="bi bi-eye"></i> Ver detalles
-                                    </a>
+                                    <div class="btn-group btn-group-sm" role="group" aria-label="Acciones del pedido">
+                                        <a th:href="@{/admin/pedidos/{id}(id=${pedido.idPedido})}" class="btn btn-outline-secondary">
+                                            <i class="bi bi-eye"></i> Ver detalles
+                                        </a>
+                                        <a th:href="@{/admin/pedidos/editar/{id}(id=${pedido.idPedido})}" class="btn btn-outline-primary">
+                                            <i class="bi bi-pencil-square"></i> Editar
+                                        </a>
+                                    </div>
                                 </td>
                             </tr>
                         </tbody>
