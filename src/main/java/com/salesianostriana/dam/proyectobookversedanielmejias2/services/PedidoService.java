@@ -40,6 +40,17 @@ public class PedidoService extends BaseServiceImpl<Pedido, Long, PedidoRepositor
 	}
 	
 	
+	public void modificarPedido(Pedido pedidoEditado) {
+		findById(pedidoEditado.getIdPedido())
+				.ifPresent(pedido -> {
+					pedido.setDireccionEnvio(pedidoEditado.getDireccionEnvio());
+					pedido.setEstado(pedidoEditado.getEstado());
+					pedido.setMetodoPago(pedidoEditado.getMetodoPago());
+					save(pedido);
+				});
+	}
+	
+	
 	
 	@Transactional
 	public boolean crearPedido(Pedido pedido, Long clienteId, List<String> isbns, List<Integer> cantidades) {

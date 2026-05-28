@@ -65,6 +65,27 @@ public class PedidoController {
 
 	
 	
+	@GetMapping("/admin/pedidos/editar/{id}")
+	public String mostrarFormularioEditar(@PathVariable Long id, Model model) {
+		return pedidoService.findById(id)
+				.map(pedido -> {
+					model.addAttribute("pedido", pedido);
+					model.addAttribute("estados", EstadoPedido.values());
+					return "admin/form-editar-pedidos";
+				})
+				.orElse("redirect:/admin/pedidos");
+	}
+
+	
+	
+	@PostMapping("/admin/pedidos/editar/submit")
+	public String editarPedido(@ModelAttribute("pedido") Pedido pedido) {
+		pedidoService.modificarPedido(pedido);
+		return "redirect:/admin/pedidos";
+	}
+
+	
+	
 	@PostMapping("/admin/pedidos/submit")
 	public String crearPedido(@ModelAttribute("pedido") Pedido pedido,
 			@RequestParam("clienteId") Long clienteId,
