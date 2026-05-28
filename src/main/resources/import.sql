@@ -9,7 +9,7 @@ insert into cliente (id_cliente, nombre, apellidos, email, telefono, direccion, 
 alter sequence cliente_seq restart with 4;
 
 insert into pedido (id_pedido, codigo, fecha, total, estado, metodo_pago, direccion_envio, cliente_id) values (1,'PED-001','2026-05-10',59.99,'PENDIENTE','Tarjeta','Calle Real 12, Sevilla',1);
-insert into pedido (id_pedido, codigo, fecha, total, estado, metodo_pago, direccion_envio, cliente_id) values (2,'PED-002','2026-05-11',120.50,'ENVIADO','PayPal','Avenida Sol 45, Madrid',2);
+insert into pedido (id_pedido, codigo, fecha, total, estado, metodo_pago, direccion_envio, cliente_id) values (2,'PED-002','2026-05-11',18.50,'ENVIADO','PayPal','Avenida Sol 45, Madrid',2);
 insert into pedido (id_pedido, codigo, fecha, total, estado, metodo_pago, direccion_envio, cliente_id) values (3,'PED-003','2026-05-12',35.75,'ENTREGADO','Transferencia','Plaza España 7, Valencia',3);
 alter sequence pedido_seq restart with 4;
 
