@@ -9,5 +9,7 @@ import com.salesianostriana.dam.proyectobookversedanielmejias2.models.Cliente;
 public interface ClienteRepository extends JpaRepository<Cliente, Long>{
 
 	Optional<Cliente> findByUserUsername(String username);
+	
+	boolean existsByEmail(String email);
 
 }

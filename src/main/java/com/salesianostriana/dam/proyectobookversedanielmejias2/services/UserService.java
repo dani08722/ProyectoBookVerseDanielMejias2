@@ -19,5 +19,9 @@ public class UserService extends BaseServiceImpl<User, Long, UserRepository> imp
 		return repository.findFirstByUsername(username)
 				.orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado"));
 	}
+	
+	public boolean existeUsername(String username) {
+		return repository.existsByUsername(username);
+	}
 
 }
