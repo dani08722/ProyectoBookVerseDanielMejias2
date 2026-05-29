@@ -35,6 +35,11 @@
                             <span>Has cerrado sesión correctamente.</span>
                         </div>
 
+                        <div th:if="${mensajeExito}" class="alert alert-success d-flex align-items-center gap-2" role="alert">
+                            <i class="bi bi-check-circle-fill"></i>
+                            <span th:text="${mensajeExito}">Cuenta creada correctamente.</span>
+                        </div>
+
                         <form th:action="@{/login}" method="post">
                             <div class="mb-3">
                                 <label for="username" class="form-label fw-semibold">Nombre de usuario</label>
