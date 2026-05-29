@@ -3,6 +3,7 @@ package com.salesianostriana.dam.proyectobookversedanielmejias2.models;
 import java.util.ArrayList;
 import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
@@ -39,7 +40,7 @@ public class Libro {
     @Builder.Default
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
-    @OneToMany(mappedBy = "libro")
+    @OneToMany(mappedBy = "libro", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<LineaPedido> lineasPedido = new ArrayList<>();
 
 }

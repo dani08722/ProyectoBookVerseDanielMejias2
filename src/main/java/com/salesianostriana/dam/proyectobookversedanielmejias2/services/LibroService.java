@@ -11,13 +11,9 @@ import com.salesianostriana.dam.proyectobookversedanielmejias2.repository.LibroR
 import com.salesianostriana.dam.proyectobookversedanielmejias2.services.base.BaseServiceImpl;
 
 import jakarta.transaction.Transactional;
-import lombok.RequiredArgsConstructor;
 
 @Service
-@RequiredArgsConstructor
 public class LibroService extends BaseServiceImpl<Libro, String, LibroRepository>{
-
-	private final LineaPedidoService lineaPedidoService;
 
 	
 	
@@ -31,11 +27,7 @@ public class LibroService extends BaseServiceImpl<Libro, String, LibroRepository
 	
 	@Transactional
 	public void eliminarLibro(String isbn) {
-		findById(isbn)
-				.ifPresent(libro -> {
-					lineaPedidoService.deleteByIsbn(isbn);
-					delete(libro);
-				});
+		findById(isbn).ifPresent(this::delete);
 	}
 
 }

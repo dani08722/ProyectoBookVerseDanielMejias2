@@ -1,7 +1,6 @@
 package com.salesianostriana.dam.proyectobookversedanielmejias2.services;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Optional;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -12,7 +11,6 @@ import com.salesianostriana.dam.proyectobookversedanielmejias2.models.User;
 import com.salesianostriana.dam.proyectobookversedanielmejias2.models.UserRole;
 import com.salesianostriana.dam.proyectobookversedanielmejias2.services.base.BaseServiceImpl;
 import com.salesianostriana.dam.proyectobookversedanielmejias2.repository.ClienteRepository;
-import com.salesianostriana.dam.proyectobookversedanielmejias2.repository.PedidoRepository;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +20,6 @@ import lombok.RequiredArgsConstructor;
 public class ClienteService extends BaseServiceImpl<Cliente, Long, ClienteRepository> {
 
 	private final PasswordEncoder passwordEncoder;
-	private final PedidoRepository pedidoRepository;
 
 	
 	
@@ -78,7 +75,6 @@ public class ClienteService extends BaseServiceImpl<Cliente, Long, ClienteReposi
 						return false;
 					}
 
-					new ArrayList<>(cliente.getPedidos()).forEach(pedidoRepository::delete);
 					delete(cliente);
 					return true;
 				})

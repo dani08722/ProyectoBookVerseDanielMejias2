@@ -49,7 +49,7 @@ public class Cliente {
     @Builder.Default
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
-    @OneToMany(mappedBy = "cliente")
+    @OneToMany(mappedBy = "cliente", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Pedido> pedidos = new ArrayList<>();
 	
 }
