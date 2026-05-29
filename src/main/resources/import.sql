@@ -1,10 +1,10 @@
-insert into app_user (id, username, password, role) values (1,'daniel','{noop}1234','ADMIN');
-insert into app_user (id, username, password, role) values (2,'lucia','{noop}abcd','USER');
+insert into app_user (id, username, password, role) values (1,'admin','{noop}admin','ADMIN');
+insert into app_user (id, username, password, role) values (2,'user','{noop}user','USER');
 insert into app_user (id, username, password, role) values (3,'carlos','{noop}pass123','USER');
 alter sequence app_user_seq restart with 4;
 
-insert into cliente (id_cliente, nombre, apellidos, email, telefono, direccion, ciudad, codigo_postal, pais, fecha_registro, activo, user_id) values (1,'Daniel','Mejías','daniel@gmail.com','600111222','Calle Real 12','Sevilla','41001','España','2026-05-01',true,1);
-insert into cliente (id_cliente, nombre, apellidos, email, telefono, direccion, ciudad, codigo_postal, pais, fecha_registro, activo, user_id) values (2,'Lucía','Fernández','lucia@gmail.com','611222333','Avenida Sol 45','Madrid','28001','España','2026-05-02',true,2);
+insert into cliente (id_cliente, nombre, apellidos, email, telefono, direccion, ciudad, codigo_postal, pais, fecha_registro, activo, user_id) values (1,'admin','admin','admin@gmail.com','600111222','Calle Real 12','Sevilla','41001','España','2026-05-01',true,1);
+insert into cliente (id_cliente, nombre, apellidos, email, telefono, direccion, ciudad, codigo_postal, pais, fecha_registro, activo, user_id) values (2,'user','user','user@gmail.com','611222333','Avenida Sol 45','Madrid','28001','España','2026-05-02',true,2);
 insert into cliente (id_cliente, nombre, apellidos, email, telefono, direccion, ciudad, codigo_postal, pais, fecha_registro, activo, user_id) values (3,'Carlos','Ruiz','carlos@gmail.com','622333444','Plaza España 7','Valencia','46001','España','2026-05-03',false,3);
 alter sequence cliente_seq restart with 4;
 

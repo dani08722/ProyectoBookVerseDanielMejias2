@@ -69,7 +69,7 @@
                             </tr>
                         </thead>
                         <tbody id="tablaPedidos">
-                            <tr th:each="pedido : ${pedidos}"
+                            <tr th:each="pedido, iterStat : ${pedidos}"
                                 th:data-estado="${pedido.estado}"
                                 th:data-busqueda="${pedido.codigo + ' ' + (pedido.cliente != null ? pedido.cliente.nombre + ' ' + pedido.cliente.apellidos + ' ' + pedido.cliente.email : '') + ' ' + pedido.direccionEnvio}">
                                 <td class="fw-semibold" th:text="${pedido.codigo}">PED-001</td>
@@ -95,6 +95,35 @@
                                         <a th:href="@{/admin/pedidos/editar/{id}(id=${pedido.idPedido})}" class="btn btn-outline-primary">
                                             <i class="bi bi-pencil-square"></i> Editar
                                         </a>
+                                        <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" th:data-bs-target="${'#eliminarPedidoModal' + iterStat.index}">
+                                            <i class="bi bi-trash"></i> Eliminar
+                                        </button>
+                                    </div>
+
+                                    <div class="modal fade text-start" th:id="${'eliminarPedidoModal' + iterStat.index}" tabindex="-1" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title">Eliminar pedido</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <p class="mb-0">
+                                                        ¿Seguro que quieres eliminar el pedido
+                                                        <strong th:text="${pedido.codigo}">este pedido</strong>
+                                                        ?
+                                                    </p>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                                    <form th:action="@{/admin/pedidos/eliminar/{id}(id=${pedido.idPedido})}" method="post">
+                                                        <button type="submit" class="btn btn-danger">
+                                                            <i class="bi bi-trash"></i> Terminar de borrar
+                                                        </button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </td>
                             </tr>

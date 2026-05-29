@@ -51,6 +51,12 @@ public class PedidoService extends BaseServiceImpl<Pedido, Long, PedidoRepositor
 	}
 	
 	
+	@Transactional
+	public void eliminarPedido(Long id) {
+		findById(id).ifPresent(this::delete);
+	}
+	
+	
 	
 	@Transactional
 	public boolean crearPedido(Pedido pedido, Long clienteId, List<String> isbns, List<Integer> cantidades) {

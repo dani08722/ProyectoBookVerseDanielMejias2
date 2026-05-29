@@ -85,6 +85,13 @@ public class PedidoController {
 	}
 
 	
+	@PostMapping("/admin/pedidos/eliminar/{id}")
+	public String eliminarPedido(@PathVariable Long id) {
+		pedidoService.eliminarPedido(id);
+		return "redirect:/admin/pedidos";
+	}
+
+	
 	
 	@PostMapping("/admin/pedidos/submit")
 	public String crearPedido(@ModelAttribute("pedido") Pedido pedido,
