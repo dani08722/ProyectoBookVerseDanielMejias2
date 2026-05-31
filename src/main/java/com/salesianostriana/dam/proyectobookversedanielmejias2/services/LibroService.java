@@ -15,19 +15,40 @@ import jakarta.transaction.Transactional;
 @Service
 public class LibroService extends BaseServiceImpl<Libro, String, LibroRepository>{
 
-	
-	
-	public List<Libro> obtenerLibrosAleatorios(int numero) {
-		List<String> listaIds = repository.obtenerIds();
-		Collections.shuffle(listaIds);
-		listaIds = listaIds.stream().limit(numero).collect(Collectors.toList());
-		return repository.findAllById(listaIds);
-	}
+    public List<Libro> obtenerLibrosAleatorios(int numero) {
+        List<String> listaIds = repository.obtenerIds();
+        Collections.shuffle(listaIds);
+        listaIds = listaIds.stream().limit(numero).collect(Collectors.toList());
+        return repository.findAllById(listaIds);
+    }
+    
+    
 
-	
-	@Transactional
-	public void eliminarLibro(String isbn) {
-		findById(isbn).ifPresent(this::delete);
-	}
+    public List<Libro> buscarPorTexto(String texto) {
+
+        if (texto == null || texto.isBlank()) {
+            return repository.findAll();
+        }
+
+        return repository.buscarPorTexto(texto);
+    }
+    
+    
+
+    public List<Libro> filtrarCatalogo(String genero, String texto) {
+
+        if (texto != null && !texto.isBlank()) {
+            return repository.buscarPorTexto(texto);
+        }
+
+        return repository.findAll();
+    }
+    
+    
+
+    @Transactional
+    public void eliminarLibro(String isbn) {
+        findById(isbn).ifPresent(this::delete);
+    }
 
 }
