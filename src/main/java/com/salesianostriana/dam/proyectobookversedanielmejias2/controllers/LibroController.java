@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.salesianostriana.dam.proyectobookversedanielmejias2.models.Libro;
 import com.salesianostriana.dam.proyectobookversedanielmejias2.services.LibroService;
@@ -21,10 +22,18 @@ public class LibroController {
 	
 	
 	@GetMapping("/catalogo")
-    public String listarTodos(Model model) {
-        
-        model.addAttribute("libros", libroService.findAll());
-        return "catalogo"; //
+    public String listarTodos(
+            @RequestParam(required = false) String genero,
+            @RequestParam(required = false) String texto,
+            Model model) {
+
+        model.addAttribute("libros",
+                libroService.filtrarCatalogo(genero, texto));
+
+        model.addAttribute("generoSeleccionado", genero);
+        model.addAttribute("textoBusqueda", texto);
+
+        return "catalogo";
     }
 
 	
