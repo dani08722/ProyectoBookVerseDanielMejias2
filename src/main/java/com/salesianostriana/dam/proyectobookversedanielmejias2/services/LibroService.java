@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
+import com.salesianostriana.dam.proyectobookversedanielmejias2.exception.LibroDuplicadoException;
 import com.salesianostriana.dam.proyectobookversedanielmejias2.models.Libro;
 import com.salesianostriana.dam.proyectobookversedanielmejias2.repository.LibroRepository;
 import com.salesianostriana.dam.proyectobookversedanielmejias2.services.base.BaseServiceImpl;
@@ -42,6 +43,16 @@ public class LibroService extends BaseServiceImpl<Libro, String, LibroRepository
         }
 
         return repository.findAll();
+    }
+    
+    
+
+    public Libro crearLibro(Libro libro) {
+        if (repository.existsById(libro.getIsbn())) {
+            throw new LibroDuplicadoException(libro.getIsbn());
+        }
+
+        return save(libro);
     }
     
     
