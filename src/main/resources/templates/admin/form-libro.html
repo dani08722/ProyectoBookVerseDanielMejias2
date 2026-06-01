@@ -84,6 +84,13 @@
                                     </div>
                                 </div>
                                 <div class="col-md-4">
+                                    <label for="descuento" class="form-label fw-bold">Descuento (%)</label>
+                                    <div class="input-group">
+                                        <input type="number" min="0" max="100" th:field="*{descuento}" class="form-control" id="descuento" required>
+                                        <span class="input-group-text">%</span>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
                                     <label for="stock" class="form-label fw-bold">Stock Inicial</label>
                                     <input type="number" th:field="*{stock}" class="form-control" id="stock" required>
                                 </div>

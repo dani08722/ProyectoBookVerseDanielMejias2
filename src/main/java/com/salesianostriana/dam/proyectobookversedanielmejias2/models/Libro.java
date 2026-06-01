@@ -31,6 +31,7 @@ public class Libro {
     private int numeroPaginas;
 
     private double precio;
+    private int descuento;
     private int stock;
 
     private String descripcion;
@@ -42,5 +43,17 @@ public class Libro {
     @EqualsAndHashCode.Exclude
     @OneToMany(mappedBy = "libro", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<LineaPedido> lineasPedido = new ArrayList<>();
+
+    public boolean tieneDescuento() {
+        return descuento > 0;
+    }
+
+    public double getPrecioConDescuento() {
+        if (!tieneDescuento()) {
+            return precio;
+        }
+
+        return precio * (100 - descuento) / 100.0;
+    }
 
 }

@@ -44,8 +44,13 @@
                         <h1 class="display-6 fw-bold text-dark mb-2" th:text="${libro.titulo}">Título del Libro</h1>
                         <p class="lead text-secondary mb-4" th:text="${libro.autor}">Autor del Libro</p>
 
-                        <div class="d-flex align-items-center gap-3 mb-4">
-                            <span class="h2 fw-bold text-primary mb-0" th:text="${#numbers.formatDecimal(libro.precio, 1, 2)} + '€'">0.00€</span>
+                        <div class="d-flex align-items-center gap-3 mb-4 flex-wrap">
+                            <span th:if="${libro.descuento > 0}" class="h5 text-muted text-decoration-line-through mb-0"
+                                  th:text="${#numbers.formatDecimal(libro.precio, 1, 2)} + ' EUR'">0.00 EUR</span>
+                            <span class="h2 fw-bold text-primary mb-0"
+                                  th:text="${#numbers.formatDecimal(libro.precioConDescuento, 1, 2)} + ' EUR'">0.00 EUR</span>
+                            <span th:if="${libro.descuento > 0}" class="badge text-bg-danger rounded-pill"
+                                  th:text="${'-' + libro.descuento + '%'}">-10%</span>
                             <span class="badge bg-light text-dark border" th:text="${libro.stock} + ' unidades'">10 unidades</span>
                         </div>
 

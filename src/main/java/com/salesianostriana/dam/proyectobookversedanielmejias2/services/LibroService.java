@@ -35,18 +35,6 @@ public class LibroService extends BaseServiceImpl<Libro, String, LibroRepository
     }
     
     
-
-    public List<Libro> filtrarCatalogo(String genero, String texto) {
-
-        if (texto != null && !texto.isBlank()) {
-            return repository.buscarPorTexto(texto);
-        }
-
-        return repository.findAll();
-    }
-    
-    
-
     public Libro crearLibro(Libro libro) {
         if (repository.existsById(libro.getIsbn())) {
             throw new LibroDuplicadoException(libro.getIsbn());

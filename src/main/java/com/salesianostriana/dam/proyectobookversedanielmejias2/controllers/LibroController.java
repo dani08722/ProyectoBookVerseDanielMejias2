@@ -24,14 +24,10 @@ public class LibroController {
 	
 	@GetMapping("/catalogo")
     public String listarTodos(
-            @RequestParam(required = false) String genero,
             @RequestParam(required = false) String texto,
             Model model) {
 
-        model.addAttribute("libros",
-                libroService.filtrarCatalogo(genero, texto));
-
-        model.addAttribute("generoSeleccionado", genero);
+        model.addAttribute("libros", libroService.buscarPorTexto(texto));
         model.addAttribute("textoBusqueda", texto);
 
         return "catalogo";
