@@ -23,6 +23,16 @@
             </a>
         </div>
 
+        <div th:if="${mensajeExito}" class="alert alert-success d-flex align-items-center gap-2" role="alert">
+            <i class="bi bi-check-circle-fill"></i>
+            <span th:text="${mensajeExito}">Libro eliminado correctamente.</span>
+        </div>
+
+        <div th:if="${mensajeError}" class="alert alert-danger d-flex align-items-center gap-2" role="alert">
+            <i class="bi bi-exclamation-triangle-fill"></i>
+            <span th:text="${mensajeError}">No se puede eliminar el libro.</span>
+        </div>
+
         <div class="card border-0 shadow-sm">
             <div class="card-body p-0">
                 <div class="table-responsive">

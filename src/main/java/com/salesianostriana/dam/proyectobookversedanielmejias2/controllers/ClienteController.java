@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.salesianostriana.dam.proyectobookversedanielmejias2.exception.ClienteNoEliminableException;
 import com.salesianostriana.dam.proyectobookversedanielmejias2.models.Cliente;
 import com.salesianostriana.dam.proyectobookversedanielmejias2.services.ClienteService;
 
@@ -71,10 +72,11 @@ public class ClienteController {
 	
 	@PostMapping("/admin/clientes/eliminar/{id}")
 	public String eliminarCliente(@PathVariable Long id, RedirectAttributes redirectAttributes) {
-		if (clienteService.eliminarCliente(id)) {
+		try {
+			clienteService.eliminarCliente(id);
 			redirectAttributes.addFlashAttribute("mensajeExito", "Cliente eliminado correctamente.");
-		} else {
-			redirectAttributes.addFlashAttribute("mensajeError", "No se puede eliminar un cliente administrador.");
+		} catch (ClienteNoEliminableException ex) {
+			redirectAttributes.addFlashAttribute("mensajeError", ex.getMessage());
 		}
 
 		return "redirect:/admin/clientes";

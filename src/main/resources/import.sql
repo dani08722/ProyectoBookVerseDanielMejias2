@@ -10,8 +10,7 @@ alter sequence cliente_seq restart with 4;
 
 insert into pedido (id_pedido, codigo, fecha, total, estado, metodo_pago, direccion_envio, cliente_id) values (1,'PED-001','2026-05-10',59.99,'PENDIENTE','Tarjeta','Calle Real 12, Sevilla',1);
 insert into pedido (id_pedido, codigo, fecha, total, estado, metodo_pago, direccion_envio, cliente_id) values (2,'PED-002','2026-05-11',18.50,'ENVIADO','PayPal','Avenida Sol 45, Madrid',2);
-insert into pedido (id_pedido, codigo, fecha, total, estado, metodo_pago, direccion_envio, cliente_id) values (3,'PED-003','2026-05-12',35.75,'ENTREGADO','Transferencia','Plaza España 7, Valencia',3);
-alter sequence pedido_seq restart with 4;
+alter sequence pedido_seq restart with 3;
 
 insert into libro (isbn, titulo, autor, editorial, anio_publicacion, genero, idioma, numero_paginas, precio, descuento, stock, descripcion, imagen_url, disponible) values ('9788408274129','El Problema de los Tres Cuerpos','Liu Cixin','Nova',2022,'Ciencia Ficción','Español',416,22.95,10,15,'Una novela de ciencia ficción sobre el primer contacto con una civilización extraterrestre.','https://m.media-amazon.com/images/I/51rP8+IANzL.jpg',true);
 insert into libro (isbn, titulo, autor, editorial, anio_publicacion, genero, idioma, numero_paginas, precio, descuento, stock, descripcion, imagen_url, disponible) values ('9788445006547','1984','George Orwell','Minotauro',2021,'Distopía','Español',352,14.95,0,20,'Una crítica al totalitarismo y la vigilancia extrema.','https://m.media-amazon.com/images/I/51rXrmHv51L.jpg',true);

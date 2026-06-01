@@ -9,8 +9,10 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.salesianostriana.dam.proyectobookversedanielmejias2.exception.LibroDuplicadoException;
+import com.salesianostriana.dam.proyectobookversedanielmejias2.exception.LibroNoEliminableException;
 import com.salesianostriana.dam.proyectobookversedanielmejias2.models.Libro;
 import com.salesianostriana.dam.proyectobookversedanielmejias2.services.LibroService;
 
@@ -104,8 +106,14 @@ public class LibroController {
 	
 	
 	@PostMapping("/admin/libros/eliminar/{isbn}")
-	public String eliminarLibro(@PathVariable String isbn) {
-		libroService.eliminarLibro(isbn);
+	public String eliminarLibro(@PathVariable String isbn, RedirectAttributes redirectAttributes) {
+		try {
+			libroService.eliminarLibro(isbn);
+			redirectAttributes.addFlashAttribute("mensajeExito", "Libro eliminado correctamente.");
+		} catch (LibroNoEliminableException ex) {
+			redirectAttributes.addFlashAttribute("mensajeError", ex.getMessage());
+		}
+
 		return "redirect:/admin/libros";
 	}
 
