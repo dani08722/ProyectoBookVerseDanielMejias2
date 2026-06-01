@@ -9,7 +9,10 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.salesianostriana.dam.proyectobookversedanielmejias2.exception.LibroDuplicadoException;
+import com.salesianostriana.dam.proyectobookversedanielmejias2.exception.LibroNoEliminableException;
 import com.salesianostriana.dam.proyectobookversedanielmejias2.models.Libro;
 import com.salesianostriana.dam.proyectobookversedanielmejias2.services.LibroService;
 
@@ -23,14 +26,10 @@ public class LibroController {
 	
 	@GetMapping("/catalogo")
     public String listarTodos(
-            @RequestParam(required = false) String genero,
             @RequestParam(required = false) String texto,
             Model model) {
 
-        model.addAttribute("libros",
-                libroService.filtrarCatalogo(genero, texto));
-
-        model.addAttribute("generoSeleccionado", genero);
+        model.addAttribute("libros", libroService.buscarPorTexto(texto));
         model.addAttribute("textoBusqueda", texto);
 
         return "catalogo";
@@ -55,14 +54,28 @@ public class LibroController {
 	@GetMapping("/admin/libros/crear")
 	public String mostrarFormularioCrear(Model model) {
 		model.addAttribute("libro", new Libro());
+		model.addAttribute("modoEdicion", false);
 		return "admin/form-libro";
 	}
 	
 	
 	
 	@PostMapping("/admin/libros/submit")
-		public String crearLibro(@ModelAttribute("libro") Libro libro) {
-			libroService.save(libro);
+		public String crearLibro(@ModelAttribute("libro") Libro libro,
+				@RequestParam(defaultValue = "false") boolean modoEdicion,
+				Model model) {
+			try {
+				if (modoEdicion) {
+					libroService.save(libro);
+				} else {
+					libroService.crearLibro(libro);
+				}
+			} catch (LibroDuplicadoException ex) {
+				model.addAttribute("mensajeError", ex.getMessage());
+				model.addAttribute("modoEdicion", false);
+				return "admin/form-libro";
+			}
+			
 			return "redirect:/admin/libros";
 	}
 	
@@ -83,6 +96,7 @@ public class LibroController {
 
 		if (libro.isPresent()) {
 			model.addAttribute("libro", libro.get());
+			model.addAttribute("modoEdicion", true);
 			return "admin/form-libro";
 		}
 
@@ -92,8 +106,14 @@ public class LibroController {
 	
 	
 	@PostMapping("/admin/libros/eliminar/{isbn}")
-	public String eliminarLibro(@PathVariable String isbn) {
-		libroService.eliminarLibro(isbn);
+	public String eliminarLibro(@PathVariable String isbn, RedirectAttributes redirectAttributes) {
+		try {
+			libroService.eliminarLibro(isbn);
+			redirectAttributes.addFlashAttribute("mensajeExito", "Libro eliminado correctamente.");
+		} catch (LibroNoEliminableException ex) {
+			redirectAttributes.addFlashAttribute("mensajeError", ex.getMessage());
+		}
+
 		return "redirect:/admin/libros";
 	}
 

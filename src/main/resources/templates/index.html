@@ -40,7 +40,14 @@
                         <h5 class="card-title fw-bold text-truncate" th:text="${libro.titulo}">Título del Libro</h5>
                         <p class="card-text text-muted small mb-3" th:text="${libro.autor}">Autor</p>
                         <div class="mt-auto d-flex justify-content-between align-items-center">
-                            <span class="fs-5 fw-bold text-primary" th:text="${#numbers.formatDecimal(libro.precio, 1, 2)} + ' EUR'">19.99 EUR</span>
+                            <div class="d-flex align-items-baseline gap-2 flex-wrap">
+                                <span th:if="${libro.descuento > 0}" class="text-muted text-decoration-line-through small"
+                                      th:text="${#numbers.formatDecimal(libro.precio, 1, 2)} + ' EUR'">19.99 EUR</span>
+                                <span class="fs-5 fw-bold text-primary"
+                                      th:text="${#numbers.formatDecimal(libro.precioConDescuento, 1, 2)} + ' EUR'">19.99 EUR</span>
+                                <span th:if="${libro.descuento > 0}" class="badge text-bg-danger"
+                                      th:text="${'-' + libro.descuento + '%'}">-10%</span>
+                            </div>
                         </div>
                     </div>
 

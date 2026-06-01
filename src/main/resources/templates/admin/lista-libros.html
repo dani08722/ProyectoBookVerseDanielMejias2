@@ -23,6 +23,16 @@
             </a>
         </div>
 
+        <div th:if="${mensajeExito}" class="alert alert-success d-flex align-items-center gap-2" role="alert">
+            <i class="bi bi-check-circle-fill"></i>
+            <span th:text="${mensajeExito}">Libro eliminado correctamente.</span>
+        </div>
+
+        <div th:if="${mensajeError}" class="alert alert-danger d-flex align-items-center gap-2" role="alert">
+            <i class="bi bi-exclamation-triangle-fill"></i>
+            <span th:text="${mensajeError}">No se puede eliminar el libro.</span>
+        </div>
+
         <div class="card border-0 shadow-sm">
             <div class="card-body p-0">
                 <div class="table-responsive">
@@ -43,7 +53,13 @@
                                 <td th:text="${libro.isbn}">9780000000000</td>
                                 <td class="fw-semibold" th:text="${libro.titulo}">Titulo</td>
                                 <td th:text="${libro.autor}">Autor</td>
-                                <td th:text="${#numbers.formatDecimal(libro.precio, 1, 2)} + ' EUR'">19.99 EUR</td>
+                                <td>
+                                    <span th:if="${libro.descuento > 0}" class="text-muted text-decoration-line-through small d-block"
+                                          th:text="${#numbers.formatDecimal(libro.precio, 1, 2)} + ' EUR'">19.99 EUR</span>
+                                    <span th:text="${#numbers.formatDecimal(libro.precioConDescuento, 1, 2)} + ' EUR'">19.99 EUR</span>
+                                    <span th:if="${libro.descuento > 0}" class="badge text-bg-danger ms-1"
+                                          th:text="${'-' + libro.descuento + '%'}">-10%</span>
+                                </td>
                                 <td th:text="${libro.stock}">10</td>
                                 <td>
                                     <span th:if="${libro.disponible}" class="badge text-bg-success">Disponible</span>

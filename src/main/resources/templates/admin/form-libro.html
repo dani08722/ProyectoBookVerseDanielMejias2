@@ -20,18 +20,24 @@
                     <div class="card-header bg-primary text-white py-3">
                         <h4 class="mb-0">
                             <i class="bi bi-journal-plus"></i>
-                            <span th:text="${libro.isbn == null ? 'Añadir Nuevo Libro' : 'Editar Libro'}">Añadir Nuevo Libro</span>
+                            <span th:text="${modoEdicion ? 'Editar Libro' : 'Añadir Nuevo Libro'}">Añadir Nuevo Libro</span>
                         </h4>
                     </div>
                     <div class="card-body p-4">
                         
+                        <div th:if="${mensajeError}" class="alert alert-danger" role="alert">
+                            <i class="bi bi-exclamation-triangle"></i>
+                            <span th:text="${mensajeError}">No se ha podido guardar el libro.</span>
+                        </div>
+                        
                         <form th:action="@{/admin/libros/submit}" th:object="${libro}" method="post">
+                            <input type="hidden" name="modoEdicion" th:value="${modoEdicion}">
                             
                             <h5 class="text-primary border-bottom pb-2 mb-4">Información General</h5>
                             <div class="row g-3">
                                 <div class="col-md-4">
                                     <label for="isbn" class="form-label fw-bold">ISBN</label>
-                                    <input type="text" th:field="*{isbn}" class="form-control" id="isbn" placeholder="978-..." th:readonly="${libro.isbn != null}" required>
+                                    <input type="text" th:field="*{isbn}" class="form-control" id="isbn" placeholder="978-..." th:readonly="${modoEdicion}" required>
                                 </div>
                                 <div class="col-md-8">
                                     <label for="titulo" class="form-label fw-bold">Título del Libro</label>
@@ -78,6 +84,13 @@
                                     </div>
                                 </div>
                                 <div class="col-md-4">
+                                    <label for="descuento" class="form-label fw-bold">Descuento (%)</label>
+                                    <div class="input-group">
+                                        <input type="number" min="0" max="100" th:field="*{descuento}" class="form-control" id="descuento" required>
+                                        <span class="input-group-text">%</span>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
                                     <label for="stock" class="form-label fw-bold">Stock Inicial</label>
                                     <input type="number" th:field="*{stock}" class="form-control" id="stock" required>
                                 </div>
@@ -104,7 +117,7 @@
                             <div class="mt-5 d-flex gap-3">
                                 <button type="submit" class="btn btn-primary px-5 rounded-pill">
                                     <i class="bi bi-check-circle"></i>
-                                    <span th:text="${libro.isbn == null ? 'Crear Libro' : 'Guardar Cambios'}">Guardar Libro</span>
+                                    <span th:text="${modoEdicion ? 'Guardar Cambios' : 'Crear Libro'}">Guardar Libro</span>
                                 </button>
                                 <a th:href="@{/admin/libros}" class="btn btn-outline-secondary px-5 rounded-pill">
                                     Cancelar

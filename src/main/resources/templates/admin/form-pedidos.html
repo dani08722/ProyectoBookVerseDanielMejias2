@@ -93,8 +93,8 @@
                                                     <option value="">Selecciona un libro</option>
                                                     <option th:each="libro : ${libros}"
                                                             th:value="${libro.isbn}"
-                                                            th:text="${libro.titulo + ' - ' + #numbers.formatDecimal(libro.precio, 1, 2) + ' EUR'}"
-                                                            th:data-precio="${libro.precio}"
+                                                            th:text="${libro.descuento > 0 ? libro.titulo + ' - ' + #numbers.formatDecimal(libro.precioConDescuento, 1, 2) + ' EUR (' + libro.descuento + '% dto.)' : libro.titulo + ' - ' + #numbers.formatDecimal(libro.precio, 1, 2) + ' EUR'}"
+                                                            th:data-precio="${libro.precioConDescuento}"
                                                             th:data-stock="${libro.stock}">
                                                         Libro
                                                     </option>

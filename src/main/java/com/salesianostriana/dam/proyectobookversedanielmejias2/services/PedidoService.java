@@ -163,7 +163,7 @@ public class PedidoService extends BaseServiceImpl<Pedido, Long, PedidoRepositor
 							.pedido(pedido)
 							.libro(libro)
 							.cantidad(cantidad)
-							.precioUnitario(libro.getPrecio())
+							.precioUnitario(libro.getPrecioConDescuento())
 							.build()));
 		}
 		//Devolvemos la lista con todas las líneas generadas

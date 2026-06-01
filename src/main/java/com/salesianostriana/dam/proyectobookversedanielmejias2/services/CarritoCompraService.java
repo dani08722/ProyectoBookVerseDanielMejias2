@@ -48,7 +48,7 @@ public class CarritoCompraService extends BaseServiceImpl<Libro, String, LibroRe
 			lineas.add(LineaPedido.builder()
 					.libro(l)
 					.cantidad(1)
-					.precioUnitario(l.getPrecio())
+					.precioUnitario(l.getPrecioConDescuento())
 					.build());
 		}
 	}

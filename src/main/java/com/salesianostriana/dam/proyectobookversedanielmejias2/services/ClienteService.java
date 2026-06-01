@@ -1,14 +1,18 @@
 package com.salesianostriana.dam.proyectobookversedanielmejias2.services;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.salesianostriana.dam.proyectobookversedanielmejias2.exception.ClienteNoEliminableException;
 import com.salesianostriana.dam.proyectobookversedanielmejias2.models.Cliente;
+import com.salesianostriana.dam.proyectobookversedanielmejias2.models.EstadoPedido;
 import com.salesianostriana.dam.proyectobookversedanielmejias2.models.User;
 import com.salesianostriana.dam.proyectobookversedanielmejias2.models.UserRole;
+import com.salesianostriana.dam.proyectobookversedanielmejias2.repository.PedidoRepository;
 import com.salesianostriana.dam.proyectobookversedanielmejias2.repository.UserRepository;
 import com.salesianostriana.dam.proyectobookversedanielmejias2.services.base.BaseServiceImpl;
 import com.salesianostriana.dam.proyectobookversedanielmejias2.repository.ClienteRepository;
@@ -22,6 +26,7 @@ public class ClienteService extends BaseServiceImpl<Cliente, Long, ClienteReposi
 
 	private final PasswordEncoder passwordEncoder;
 	private final UserRepository userRepository;
+	private final PedidoRepository pedidoRepository;
 
 	
 	
@@ -92,17 +97,22 @@ public class ClienteService extends BaseServiceImpl<Cliente, Long, ClienteReposi
 	
 	
 	@Transactional
-	public boolean eliminarCliente(Long id) {
-		return findById(id)
-				.map(cliente -> {
+	public void eliminarCliente(Long id) {
+		findById(id)
+				.ifPresent(cliente -> {
 					if (cliente.getUser().getRole() == UserRole.ADMIN) {
-						return false;
+						throw new ClienteNoEliminableException("No se puede eliminar un cliente administrador.");
+					}
+
+					if (pedidoRepository.existsByClienteIdClienteAndEstadoIn(
+							id,
+							List.of(EstadoPedido.PENDIENTE, EstadoPedido.ENVIADO))) {
+						throw new ClienteNoEliminableException(
+								"No se puede eliminar el cliente porque tiene pedidos activos.");
 					}
 
 					delete(cliente);
-					return true;
-				})
-				.orElse(false);
+				});
 	}
 
 	

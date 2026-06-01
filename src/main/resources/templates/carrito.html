@@ -78,6 +78,8 @@
 
                                 <div class="col-6 col-md-2">
                                     <span class="text-muted small d-block">Precio</span>
+                                    <span th:if="${linea.libro.descuento > 0}" class="text-muted text-decoration-line-through small d-block"
+                                          th:text="${#numbers.formatDecimal(linea.libro.precio, 1, 2)} + ' EUR'">19.99 EUR</span>
                                     <span class="fw-semibold" th:text="${#numbers.formatDecimal(linea.precioUnitario, 1, 2)} + ' EUR'">19.99 EUR</span>
                                 </div>
 

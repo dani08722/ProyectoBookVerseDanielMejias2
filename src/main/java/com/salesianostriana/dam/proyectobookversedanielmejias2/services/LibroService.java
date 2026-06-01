@@ -6,14 +6,21 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
+import com.salesianostriana.dam.proyectobookversedanielmejias2.exception.LibroDuplicadoException;
+import com.salesianostriana.dam.proyectobookversedanielmejias2.exception.LibroNoEliminableException;
 import com.salesianostriana.dam.proyectobookversedanielmejias2.models.Libro;
+import com.salesianostriana.dam.proyectobookversedanielmejias2.repository.LineaPedidoRepository;
 import com.salesianostriana.dam.proyectobookversedanielmejias2.repository.LibroRepository;
 import com.salesianostriana.dam.proyectobookversedanielmejias2.services.base.BaseServiceImpl;
 
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 
 @Service
+@RequiredArgsConstructor
 public class LibroService extends BaseServiceImpl<Libro, String, LibroRepository>{
+
+    private final LineaPedidoRepository lineaPedidoRepository;
 
     public List<Libro> obtenerLibrosAleatorios(int numero) {
         List<String> listaIds = repository.obtenerIds();
@@ -34,20 +41,22 @@ public class LibroService extends BaseServiceImpl<Libro, String, LibroRepository
     }
     
     
-
-    public List<Libro> filtrarCatalogo(String genero, String texto) {
-
-        if (texto != null && !texto.isBlank()) {
-            return repository.buscarPorTexto(texto);
+    public Libro crearLibro(Libro libro) {
+        if (repository.existsById(libro.getIsbn())) {
+            throw new LibroDuplicadoException(libro.getIsbn());
         }
 
-        return repository.findAll();
+        return save(libro);
     }
     
     
 
     @Transactional
     public void eliminarLibro(String isbn) {
+        if (lineaPedidoRepository.existsByLibroIsbn(isbn)) {
+            throw new LibroNoEliminableException(isbn);
+        }
+
         findById(isbn).ifPresent(this::delete);
     }
 
