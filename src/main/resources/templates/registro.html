@@ -33,6 +33,12 @@
                 </div>
 
                 <form th:action="@{/registro}" th:object="${cliente}" method="post">
+                    <div th:if="${#fields.hasErrors('*')}" class="alert alert-danger" role="alert">
+                        <p class="fw-bold mb-2">Revisa tus datos:</p>
+                        <ul class="mb-0">
+                            <li th:each="error : ${#fields.errors('*')}" th:text="${error}">Error de validación</li>
+                        </ul>
+                    </div>
                     <h2 class="h5 text-primary border-bottom pb-2 mb-4">Datos personales</h2>
                     <div class="row g-3">
                         <div class="col-md-6">
@@ -55,7 +61,7 @@
                             </div>
                         </div>
                         <div class="col-md-4">
-                            <label for="telefono" class="form-label fw-semibold">Telefono</label>
+                            <label for="telefono" class="form-label fw-semibold">Teléfono</label>
                             <div class="input-group">
                                 <span class="input-group-text bg-light"><i class="bi bi-telephone text-primary"></i></span>
                                 <input type="text" th:field="*{telefono}" class="form-control" id="telefono" placeholder="+34 600 000 000">
@@ -63,7 +69,7 @@
                         </div>
                     </div>
 
-                    <h2 class="h5 text-primary border-bottom pb-2 my-4">Direccion</h2>
+                    <h2 class="h5 text-primary border-bottom pb-2 my-4">Dirección</h2>
                     <div class="row g-3">
                         <div class="col-12">
                             <label for="direccion" class="form-label fw-semibold">Dirección</label>
@@ -78,8 +84,8 @@
                             <input type="text" th:field="*{codigoPostal}" class="form-control" id="codigoPostal" placeholder="41000">
                         </div>
                         <div class="col-md-4">
-                            <label for="pais" class="form-label fw-semibold">Pais</label>
-                            <input type="text" th:field="*{pais}" class="form-control" id="pais" placeholder="Espana">
+                            <label for="pais" class="form-label fw-semibold">País</label>
+                            <input type="text" th:field="*{pais}" class="form-control" id="pais" placeholder="España">
                         </div>
                     </div>
 

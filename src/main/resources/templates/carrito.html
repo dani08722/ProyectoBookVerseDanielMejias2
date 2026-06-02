@@ -37,10 +37,10 @@
         <div th:if="${lineas == null or lineas.isEmpty()}" class="card border-0 shadow-sm">
             <div class="card-body text-center py-5">
                 <i class="bi bi-cart-x display-4 text-muted"></i>
-                <h2 class="h4 fw-bold mt-3">Tu carrito esta vacio</h2>
-                <p class="text-muted mb-4">Añade algun libro del catalogo para empezar tu pedido.</p>
+                <h2 class="h4 fw-bold mt-3">Tu carrito está vacío</h2>
+                <p class="text-muted mb-4">Añade algún libro del catálogo para empezar tu pedido.</p>
                 <a th:href="@{/catalogo}" class="btn btn-primary rounded-pill px-4">
-                    Ver catalogo
+                    Ver catálogo
                 </a>
             </div>
         </div>
@@ -62,10 +62,10 @@
                                 </div>
 
                                 <div class="col-9 col-md-4">
-                                    <h3 class="h6 fw-bold mb-1" th:text="${linea.libro.titulo}">Titulo del libro</h3>
+                                    <h3 class="h6 fw-bold mb-1" th:text="${linea.libro.titulo}">Título del libro</h3>
                                     <p class="text-muted small mb-1" th:text="${linea.libro.autor}">Autor</p>
                                     <div>
-                                        <span class="badge bg-secondary-subtle text-secondary" th:text="${linea.libro.genero}">Genero</span>
+                                        <span class="badge bg-secondary-subtle text-secondary" th:text="${linea.libro.genero}">Género</span>
                                     </div>
                                     <div class="mt-2">
                                         <a th:href="@{/libros/{isbn}(isbn=${linea.libro.isbn})}"

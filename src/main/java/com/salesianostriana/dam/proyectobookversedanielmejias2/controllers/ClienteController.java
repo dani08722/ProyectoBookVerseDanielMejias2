@@ -2,6 +2,7 @@ package com.salesianostriana.dam.proyectobookversedanielmejias2.controllers;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -12,6 +13,7 @@ import com.salesianostriana.dam.proyectobookversedanielmejias2.exception.Cliente
 import com.salesianostriana.dam.proyectobookversedanielmejias2.models.Cliente;
 import com.salesianostriana.dam.proyectobookversedanielmejias2.services.ClienteService;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @Controller
@@ -63,7 +65,21 @@ public class ClienteController {
 	
 	
 	@PostMapping("/admin/clientes/submit")
-	public String crearCliente(@ModelAttribute("cliente") Cliente cliente) {
+	public String crearCliente(@Valid @ModelAttribute("cliente") Cliente cliente,
+			BindingResult bindingResult) {
+
+		boolean clienteNuevo = cliente.getIdCliente() == null;
+
+		if (clienteNuevo && (cliente.getUser() == null || cliente.getUser().getPassword() == null
+				|| cliente.getUser().getPassword().isBlank())) {
+			bindingResult.rejectValue("user.password", "NotBlank.cliente.user.password",
+					"La contraseña es obligatoria.");
+		}
+
+		if (bindingResult.hasErrors()) {
+			return "admin/form-cliente";
+		}
+
 		clienteService.guardarCliente(cliente);
 		return "redirect:/admin/clientes";
 	}

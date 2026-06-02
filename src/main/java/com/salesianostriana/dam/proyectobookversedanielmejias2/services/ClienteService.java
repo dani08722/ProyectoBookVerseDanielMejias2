@@ -150,7 +150,7 @@ public class ClienteService extends BaseServiceImpl<Cliente, Long, ClienteReposi
 			user.setRole(UserRole.USER);
 		}
 
-		//Setea el cliente en user para asegurar que estan relacionados
+		//Setea el cliente en user para asegurar que están relacionados
 		user.setCliente(cliente);
 
 		password= user.getPassword();

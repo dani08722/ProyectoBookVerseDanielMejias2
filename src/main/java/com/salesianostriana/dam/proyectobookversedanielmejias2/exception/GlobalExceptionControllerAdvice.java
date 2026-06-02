@@ -12,7 +12,7 @@ public class GlobalExceptionControllerAdvice {
 		model.addAttribute("titulo", "Libro no encontrado");
 		model.addAttribute("mensaje", ex.getMessage());
 		model.addAttribute("urlVolver", "/catalogo");
-		model.addAttribute("textoVolver", "Volver al catalogo");
+		model.addAttribute("textoVolver", "Volver al catálogo");
 		return "error";
 	}
 	

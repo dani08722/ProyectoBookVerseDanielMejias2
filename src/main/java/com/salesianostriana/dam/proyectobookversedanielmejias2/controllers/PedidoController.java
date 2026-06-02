@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,6 +19,7 @@ import com.salesianostriana.dam.proyectobookversedanielmejias2.services.ClienteS
 import com.salesianostriana.dam.proyectobookversedanielmejias2.services.LibroService;
 import com.salesianostriana.dam.proyectobookversedanielmejias2.services.PedidoService;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @Controller
@@ -79,7 +81,15 @@ public class PedidoController {
 	
 	
 	@PostMapping("/admin/pedidos/editar/submit")
-	public String editarPedido(@ModelAttribute("pedido") Pedido pedido) {
+	public String editarPedido(@Valid @ModelAttribute("pedido") Pedido pedido,
+			BindingResult bindingResult,
+			Model model) {
+
+		if (bindingResult.hasErrors()) {
+			model.addAttribute("estados", EstadoPedido.values());
+			return "admin/form-editar-pedidos";
+		}
+
 		pedidoService.modificarPedido(pedido);
 		return "redirect:/admin/pedidos";
 	}
@@ -94,11 +104,18 @@ public class PedidoController {
 	
 	
 	@PostMapping("/admin/pedidos/submit")
-	public String crearPedido(@ModelAttribute("pedido") Pedido pedido,
+	public String crearPedido(@Valid @ModelAttribute("pedido") Pedido pedido,
+			BindingResult bindingResult,
 			@RequestParam("clienteId") Long clienteId,
 			@RequestParam("isbns") List<String> isbns,
 			@RequestParam("cantidades") List<Integer> cantidades,
-			RedirectAttributes redirectAttributes) {
+			RedirectAttributes redirectAttributes,
+			Model model) {
+
+		if (bindingResult.hasErrors()) {
+			modeloFormularioPedido(model, pedido);
+			return "admin/form-pedidos";
+		}
 
 		if (!pedidoService.crearPedido(pedido, clienteId, isbns, cantidades)) {
 			redirectAttributes.addFlashAttribute("mensajeError", "Debes seleccionar libros con stock suficiente.");
@@ -106,6 +123,13 @@ public class PedidoController {
 		}
 
 		return "redirect:/admin/pedidos";
+	}
+
+	private void modeloFormularioPedido(Model model, Pedido pedido) {
+		model.addAttribute("pedido", pedido);
+		model.addAttribute("clientes", clienteService.findAll());
+		model.addAttribute("libros", libroService.findAll());
+		model.addAttribute("estados", EstadoPedido.values());
 	}
 
 }

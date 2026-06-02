@@ -32,6 +32,12 @@
                         
                         <form th:action="@{/admin/libros/submit}" th:object="${libro}" method="post">
                             <input type="hidden" name="modoEdicion" th:value="${modoEdicion}">
+                            <div th:if="${#fields.hasErrors('*')}" class="alert alert-danger" role="alert">
+                                <p class="fw-bold mb-2">Revisa los datos del libro:</p>
+                                <ul class="mb-0">
+                                    <li th:each="error : ${#fields.errors('*')}" th:text="${error}">Error de validación</li>
+                                </ul>
+                            </div>
                             
                             <h5 class="text-primary border-bottom pb-2 mb-4">Información General</h5>
                             <div class="row g-3">
@@ -57,7 +63,7 @@
                             <h5 class="text-primary border-bottom pb-2 my-4">Detalles Técnicos</h5>
                             <div class="row g-3">
                                 <div class="col-md-3">
-                                    <label for="anio" class="form-label fw-bold">Año Publicación</label>
+                                    <label for="anio" class="form-label fw-bold">Año de publicación</label>
                                     <input type="number" th:field="*{anioPublicacion}" class="form-control" id="anio">
                                 </div>
                                 <div class="col-md-3">

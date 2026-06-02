@@ -62,12 +62,12 @@ public class PedidoService extends BaseServiceImpl<Pedido, Long, PedidoRepositor
 	public boolean crearPedido(Pedido pedido, Long clienteId, List<String> isbns, List<Integer> cantidades) {
 		List<LineaPedido> lineasPedido = crearLineasPedido(pedido, isbns, cantidades);
 
-		//Si no hay lineas de pedido o no hay stock en una linea devuelve false
+		//Si no hay líneas de pedido o no hay stock en una línea devuelve false
 		if (lineasPedido.isEmpty() || !hayStockSuficiente(lineasPedido)) {
 			return false;
 		}
 
-		//Si no se pone el codigo a mano se pone uno aleatorio
+		//Si no se pone el código a mano se pone uno aleatorio
 		if (pedido.getCodigo() == null || pedido.getCodigo().isBlank()) {
 			pedido.setCodigo("PED-" + System.currentTimeMillis());
 		}
@@ -132,7 +132,7 @@ public class PedidoService extends BaseServiceImpl<Pedido, Long, PedidoRepositor
 		//Creo una lista para poner las direcciones
 		List<String> partesDireccion = new ArrayList<>();
 			
-			//Añado a la lista la direccion
+			//Añado a la lista la dirección
 			partesDireccion.add(cliente.getDireccion());
 			//Añado a la lista la ciudad
 			partesDireccion.add(cliente.getCiudad());
@@ -144,7 +144,7 @@ public class PedidoService extends BaseServiceImpl<Pedido, Long, PedidoRepositor
 	
 	
 	private List<LineaPedido> crearLineasPedido(Pedido pedido, List<String> isbns, List<Integer> cantidades) {
-		//Inicializamos la lista de lineas de pedido vacia
+		//Inicializamos la lista de líneas de pedido vacía
 		List<LineaPedido> lineasPedido = new ArrayList<>();
 
 		//Recorremos ambas listas a la vez controlando para no salirnos de los límites
@@ -152,7 +152,7 @@ public class PedidoService extends BaseServiceImpl<Pedido, Long, PedidoRepositor
 			String isbn = isbns.get(i);
 			int cantidad = cantidades.get(i);
 			
-			//Si el ISBN es nulo, está vacio o la cantidad es menor o igual a cero pasamos al siguiente
+			//Si el ISBN es nulo, está vacío o la cantidad es menor o igual a cero pasamos al siguiente
 			if (isbn == null || isbn.isBlank() || cantidad <= 0) {
 				continue;
 			}			
@@ -172,7 +172,7 @@ public class PedidoService extends BaseServiceImpl<Pedido, Long, PedidoRepositor
 
 	
 	
-	//Mira todas las lineas de pedido para ver si la cantidad del pedido es mayor del stock
+	//Mira todas las líneas de pedido para ver si la cantidad del pedido es mayor del stock
 	private boolean hayStockSuficiente(List<LineaPedido> lineasPedido) {
 		for (LineaPedido linea : lineasPedido) {
 			if (linea.getCantidad() > linea.getLibro().getStock()) {

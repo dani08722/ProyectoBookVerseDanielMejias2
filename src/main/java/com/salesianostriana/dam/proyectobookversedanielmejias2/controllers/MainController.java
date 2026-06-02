@@ -1,6 +1,7 @@
 package com.salesianostriana.dam.proyectobookversedanielmejias2.controllers;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -11,6 +12,7 @@ import com.salesianostriana.dam.proyectobookversedanielmejias2.models.Cliente;
 import com.salesianostriana.dam.proyectobookversedanielmejias2.services.ClienteService;
 import com.salesianostriana.dam.proyectobookversedanielmejias2.services.LibroService;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @Controller
@@ -49,17 +51,30 @@ public class MainController {
 	
 	
 	@PostMapping("/registro")
-	public String registrarCliente(@ModelAttribute("cliente") Cliente cliente,
+	public String registrarCliente(@Valid @ModelAttribute("cliente") Cliente cliente,
+			BindingResult bindingResult,
 			RedirectAttributes redirectAttributes,
 			Model model) {
 
+		if (cliente.getUser() == null || cliente.getUser().getPassword() == null
+				|| cliente.getUser().getPassword().isBlank()) {
+			bindingResult.rejectValue("user.password", "NotBlank.cliente.user.password",
+					"La contraseña es obligatoria.");
+		}
+
+		if (bindingResult.hasErrors()) {
+			return "registro";
+		}
+
 		if (clienteService.existeUsername(cliente.getUser().getUsername())) {
-			model.addAttribute("mensajeError", "El nombre de usuario ya esta registrado.");
+			bindingResult.rejectValue("user.username", "Duplicado.cliente.user.username",
+					"El nombre de usuario ya está registrado.");
 			return "registro";
 		}
 
 		if (clienteService.existeEmail(cliente.getEmail())) {
-			model.addAttribute("mensajeError", "El email ya esta registrado.");
+			bindingResult.rejectValue("email", "Duplicado.cliente.email",
+					"El email ya está registrado.");
 			return "registro";
 		}
 

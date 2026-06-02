@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,6 +17,7 @@ import com.salesianostriana.dam.proyectobookversedanielmejias2.exception.LibroNo
 import com.salesianostriana.dam.proyectobookversedanielmejias2.models.Libro;
 import com.salesianostriana.dam.proyectobookversedanielmejias2.services.LibroService;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @Controller @RequiredArgsConstructor
@@ -61,9 +63,16 @@ public class LibroController {
 	
 	
 	@PostMapping("/admin/libros/submit")
-		public String crearLibro(@ModelAttribute("libro") Libro libro,
+		public String crearLibro(@Valid @ModelAttribute("libro") Libro libro,
+				BindingResult bindingResult,
 				@RequestParam(defaultValue = "false") boolean modoEdicion,
 				Model model) {
+
+			if (bindingResult.hasErrors()) {
+				model.addAttribute("modoEdicion", modoEdicion);
+				return "admin/form-libro";
+			}
+
 			try {
 				if (modoEdicion) {
 					libroService.save(libro);
