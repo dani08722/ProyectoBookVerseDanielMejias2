@@ -70,13 +70,13 @@ En el frontend se usan:
 Cuando la aplicación esté arrancada, se puede abrir en:
 
 ```text
-http://localhost:8080
+http://localhost:9000
 ```
 
 La consola de H2 está disponible en:
 
 ```text
-http://localhost:8080/h2-console
+http://localhost:9000/h2-console
 ```
 
 Datos de conexión de H2:
