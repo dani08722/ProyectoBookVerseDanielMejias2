@@ -1,0 +1,32 @@
+.card-img-top {
+    height: 350px;
+    object-fit: contain;
+    background-color: #fff;
+    padding: 12px;
+}
+
+.filter-section {
+    position: sticky;
+    top: 100px;
+}
+
+.catalog-results {
+    min-height: calc(100vh - 260px);
+}
+
+.empty-catalog {
+    display: flex;
+    min-height: 420px;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    border-radius: 12px;
+    background-color: #fff;
+    padding: 48px 24px;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    transition: 0.3s;
+}

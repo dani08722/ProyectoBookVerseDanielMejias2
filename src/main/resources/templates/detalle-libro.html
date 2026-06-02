@@ -6,6 +6,7 @@
     <title th:text="${libro.titulo} + ' - BookVerse'">Detalle del Libro - BookVerse</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </head>
 <body class="bg-light d-flex flex-column min-vh-100">
 
@@ -43,8 +44,13 @@
                         <h1 class="display-6 fw-bold text-dark mb-2" th:text="${libro.titulo}">Título del Libro</h1>
                         <p class="lead text-secondary mb-4" th:text="${libro.autor}">Autor del Libro</p>
 
-                        <div class="d-flex align-items-center gap-3 mb-4">
-                            <span class="h2 fw-bold text-primary mb-0" th:text="${#numbers.formatDecimal(libro.precio, 1, 2)} + '€'">0.00€</span>
+                        <div class="d-flex align-items-center gap-3 mb-4 flex-wrap">
+                            <span th:if="${libro.descuento > 0}" class="h5 text-muted text-decoration-line-through mb-0"
+                                  th:text="${#numbers.formatDecimal(libro.precio, 1, 2)} + ' EUR'">0.00 EUR</span>
+                            <span class="h2 fw-bold text-primary mb-0"
+                                  th:text="${#numbers.formatDecimal(libro.precioConDescuento, 1, 2)} + ' EUR'">0.00 EUR</span>
+                            <span th:if="${libro.descuento > 0}" class="badge text-bg-danger rounded-pill"
+                                  th:text="${'-' + libro.descuento + '%'}">-10%</span>
                             <span class="badge bg-light text-dark border" th:text="${libro.stock} + ' unidades'">10 unidades</span>
                         </div>
 
@@ -95,13 +101,12 @@
                                 </div>
                             </div>
                         </div>
-
-                        <form th:action="@{/carrito/add}" method="post">
-                            <input type="hidden" name="isbn" th:value="${libro.isbn}">
-                            <button type="submit" class="btn btn-primary btn-lg rounded-pill px-5" th:disabled="${libro.stock == 0 || !libro.disponible}">
-                                <i class="bi bi-cart-plus me-2"></i> Añadir al carrito
-                            </button>
-                        </form>
+                        <a th:href="@{/productoACarrito/{isbn}(isbn=${libro.isbn})}"
+                           class="btn btn-primary btn-lg rounded-pill px-5"
+                           th:classappend="${libro.stock == 0 || !libro.disponible} ? ' disabled'"
+                           th:aria-disabled="${libro.stock == 0 || !libro.disponible}">
+                            <i class="bi bi-cart-plus window me-2"></i> Añadir al carrito
+                        </a>
                     </div>
                 </div>
             </div>
@@ -110,6 +115,5 @@
     
     <footer th:replace="~{fragments/footer :: footer}"></footer>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

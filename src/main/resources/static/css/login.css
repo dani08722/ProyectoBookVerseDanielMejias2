@@ -1,0 +1,14 @@
+.login-section {
+    min-height: calc(100vh - 150px);
+    background:
+        linear-gradient(135deg, rgba(13, 110, 253, 0.08), rgba(33, 37, 41, 0.03)),
+        #f8f9fa;
+}
+
+.login-card {
+    max-width: 560px;
+}
+
+.form-control:focus {
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.18);
+}

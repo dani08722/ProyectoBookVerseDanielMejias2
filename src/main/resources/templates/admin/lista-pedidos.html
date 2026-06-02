@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Pedidos - BookVerse</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</head>
+<body class="bg-light">
+
+    <header th:replace="~{fragments/header :: header}"></header>
+
+    <main class="container my-5">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h1 class="h2 fw-bold mb-1">Gestión de pedidos</h1>
+                <p class="text-muted mb-0">Consulta los pedidos realizados en BookVerse.</p>
+            </div>
+            <a th:href="@{/admin/pedidos/crear}" class="btn btn-primary rounded-pill">
+                <i class="bi bi-plus-circle"></i> Crear pedido
+            </a>
+        </div>
+
+        <div class="card border-0 shadow-sm mb-4">
+            <div class="card-body">
+                <div class="row g-3 align-items-end">
+                    <div class="col-12 col-md-7">
+                        <label for="buscadorPedidos" class="form-label fw-semibold">Buscar</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-white"><i class="bi bi-search"></i></span>
+                            <input type="search" id="buscadorPedidos" class="form-control" placeholder="Código, cliente, email o dirección">
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-3">
+                        <label for="filtroEstado" class="form-label fw-semibold">Estado</label>
+                        <select id="filtroEstado" class="form-select">
+                            <option value="">Todos</option>
+                            <option value="PENDIENTE">Pendiente</option>
+                            <option value="ENVIADO">Enviado</option>
+                            <option value="ENTREGADO">Entregado</option>
+                        </select>
+                    </div>
+                    <div class="col-12 col-md-2 d-grid">
+                        <button type="button" id="limpiarFiltros" class="btn btn-outline-secondary">
+                            <i class="bi bi-x-circle"></i> Limpiar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card border-0 shadow-sm">
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-dark">
+                            <tr>
+                                <th scope="col">Código</th>
+                                <th scope="col">Fecha</th>
+                                <th scope="col">Cliente</th>
+                                <th scope="col">Estado</th>
+                                <th scope="col">Líneas</th>
+                                <th scope="col">Pago</th>
+                                <th scope="col">Dirección envío</th>
+                                <th scope="col" class="text-end">Total</th>
+                                <th scope="col" class="text-end">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tablaPedidos">
+                            <tr th:each="pedido, iterStat : ${pedidos}"
+                                th:data-estado="${pedido.estado}"
+                                th:data-busqueda="${pedido.codigo + ' ' + (pedido.cliente != null ? pedido.cliente.nombre + ' ' + pedido.cliente.apellidos + ' ' + pedido.cliente.email : '') + ' ' + pedido.direccionEnvio}">
+                                <td class="fw-semibold" th:text="${pedido.codigo}">PED-001</td>
+                                <td th:text="${#temporals.format(pedido.fecha,'dd/MM/yyyy')}">2026-05-10</td>
+                                <td>
+                                    <span th:if="${pedido.cliente != null}" th:text="${pedido.cliente.nombre + ' ' + pedido.cliente.apellidos}">Cliente</span>
+                                    <span th:unless="${pedido.cliente != null}" class="text-muted">Sin cliente</span>
+                                </td>
+                                <td>
+                                    <span th:if="${pedido.estado.name() == 'PENDIENTE'}" class="badge text-bg-warning">Pendiente</span>
+                                    <span th:if="${pedido.estado.name() == 'ENVIADO'}" class="badge text-bg-primary">Enviado</span>
+                                    <span th:if="${pedido.estado.name() == 'ENTREGADO'}" class="badge text-bg-success">Entregado</span>
+                                </td>
+                                <td th:text="${#lists.size(pedido.lineasPedido)}">2</td>
+                                <td th:text="${pedido.metodoPago}">Tarjeta</td>
+                                <td class="text-truncate" style="max-width: 260px;" th:text="${pedido.direccionEnvio}">Dirección</td>
+                                <td class="text-end fw-bold" th:text="${#numbers.formatDecimal(pedido.total, 1, 2)} + ' EUR'">59.99 EUR</td>
+                                <td class="text-end">
+                                    <div class="btn-group btn-group-sm" role="group" aria-label="Acciones del pedido">
+                                        <a th:href="@{/admin/pedidos/{id}(id=${pedido.idPedido})}" class="btn btn-outline-secondary">
+                                            <i class="bi bi-eye"></i> Ver detalles
+                                        </a>
+                                        <a th:href="@{/admin/pedidos/editar/{id}(id=${pedido.idPedido})}" class="btn btn-outline-primary">
+                                            <i class="bi bi-pencil-square"></i> Editar
+                                        </a>
+                                        <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" th:data-bs-target="${'#eliminarPedidoModal' + iterStat.index}">
+                                            <i class="bi bi-trash"></i> Eliminar
+                                        </button>
+                                    </div>
+
+                                    <div class="modal fade text-start" th:id="${'eliminarPedidoModal' + iterStat.index}" tabindex="-1" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title">Eliminar pedido</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <p class="mb-0">
+                                                        ¿Seguro que quieres eliminar el pedido
+                                                        <strong th:text="${pedido.codigo}">este pedido</strong>
+                                                        ?
+                                                    </p>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                                    <form th:action="@{/admin/pedidos/eliminar/{id}(id=${pedido.idPedido})}" method="post">
+                                                        <button type="submit" class="btn btn-danger">
+                                                            <i class="bi bi-trash"></i> Terminar de borrar
+                                                        </button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div id="sinResultados" class="alert alert-info mt-4 d-none" role="alert">
+            No hay pedidos que coincidan con los filtros.
+        </div>
+
+        <div th:if="${#lists.isEmpty(pedidos)}" class="alert alert-info mt-4" role="alert">
+            No hay pedidos creados todavía.
+        </div>
+    </main>
+	<script th:src="@{/js/lista-pedidos.js}"></script>
+</body>
+</html>

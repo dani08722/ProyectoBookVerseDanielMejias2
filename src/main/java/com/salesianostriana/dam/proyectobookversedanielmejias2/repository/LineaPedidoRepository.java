@@ -9,8 +9,10 @@ import com.salesianostriana.dam.proyectobookversedanielmejias2.models.LineaPedid
 
 public interface LineaPedidoRepository extends JpaRepository<LineaPedido, Long> {
 
+	boolean existsByLibroIsbn(String isbn);
+
 	@Modifying
 	@Query("delete from LineaPedido lp where lp.libro.isbn = :isbn")
-	void deleteByIsbn(@Param("isbn") String isbn);
+	public void deleteByIsbn(@Param("isbn") String isbn);
 
 }

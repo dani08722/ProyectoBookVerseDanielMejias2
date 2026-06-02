@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Pedidos - BookVerse</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</head>
+<body class="bg-light">
+
+    <header th:replace="~{fragments/header :: header}"></header>
+
+    <main class="container my-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+
+                <div class="card shadow-sm border-0 rounded-3">
+                    <div class="card-header bg-primary text-white py-3">
+                        <h4 class="mb-0">
+                            <i class="bi bi-receipt"></i>
+                            Crear pedido
+                        </h4>
+                    </div>
+                    <div class="card-body p-4">
+
+                        <div th:if="${mensajeError}" class="alert alert-danger d-flex align-items-center gap-2" role="alert">
+                            <i class="bi bi-exclamation-triangle-fill"></i>
+                            <span th:text="${mensajeError}">Debes seleccionar al menos un libro.</span>
+                        </div>
+
+                        <form th:action="@{/admin/pedidos/submit}" th:object="${pedido}" method="post">
+                            <div th:if="${#fields.hasErrors('*')}" class="alert alert-danger" role="alert">
+                                <p class="fw-bold mb-2">Revisa los datos del pedido:</p>
+                                <ul class="mb-0">
+                                    <li th:each="error : ${#fields.errors('*')}" th:text="${error}">Error de validación</li>
+                                </ul>
+                            </div>
+
+                            <h5 class="text-primary border-bottom pb-2 mb-4">Datos del pedido</h5>
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label for="codigo" class="form-label fw-bold">Código</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text"><i class="bi bi-upc-scan"></i></span>
+                                        <input type="text" th:field="*{codigo}" class="form-control" id="codigo" placeholder="Se genera automáticamente" readonly>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="estado" class="form-label fw-bold">Estado</label>
+                                    <select th:field="*{estado}" class="form-select" id="estado" required>
+                                        <option th:each="estado : ${estados}" th:value="${estado}" th:text="${estado}">PENDIENTE</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <h5 class="text-primary border-bottom pb-2 my-4">Cliente y envío</h5>
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label for="clienteId" class="form-label fw-bold">Cliente</label>
+                                    <select name="clienteId" class="form-select" id="clienteId" required>
+                                        <option value="">Selecciona un cliente</option>
+                                        <option th:each="cliente : ${clientes}"
+                                                th:value="${cliente.idCliente}"
+                                                th:text="${cliente.nombre + ' ' + cliente.apellidos + ' - ' + cliente.email}"
+                                                th:data-direccion="${cliente.direccion + ', ' + cliente.ciudad}">
+                                            Cliente
+                                        </option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="metodoPago" class="form-label fw-bold">Método de pago</label>
+                                    <select th:field="*{metodoPago}" class="form-select" id="metodoPago" required>
+                                        <option value="">Selecciona método</option>
+                                        <option value="Tarjeta">Tarjeta</option>
+                                        <option value="PayPal">PayPal</option>
+                                        <option value="Transferencia">Transferencia</option>
+                                        <option value="Efectivo">Efectivo</option>
+                                    </select>
+                                </div>
+                                <div class="col-12">
+                                    <label for="direccionEnvio" class="form-label fw-bold">Dirección de envío</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text"><i class="bi bi-geo-alt"></i></span>
+                                        <input type="text" th:field="*{direccionEnvio}" class="form-control" id="direccionEnvio" placeholder="Calle, ciudad" required>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <h5 class="text-primary border-bottom pb-2 my-4">Libros del pedido</h5>
+                            <div class="card border">
+                                <div class="card-body">
+                                    <div id="lineasPedido" class="vstack gap-3">
+                                        <div class="row g-3 align-items-end linea-pedido">
+                                            <div class="col-md-7">
+                                                <label class="form-label fw-bold">Libro</label>
+                                                <select name="isbns" class="form-select libro-select" required>
+                                                    <option value="">Selecciona un libro</option>
+                                                    <option th:each="libro : ${libros}"
+                                                            th:value="${libro.isbn}"
+                                                            th:text="${libro.descuento > 0 ? libro.titulo + ' - ' + #numbers.formatDecimal(libro.precioConDescuento, 1, 2) + ' EUR (' + libro.descuento + '% dto.)' : libro.titulo + ' - ' + #numbers.formatDecimal(libro.precio, 1, 2) + ' EUR'}"
+                                                            th:data-precio="${libro.precioConDescuento}"
+                                                            th:data-stock="${libro.stock}">
+                                                        Libro
+                                                    </option>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <label class="form-label fw-bold">Cantidad</label>
+                                                <input type="number" name="cantidades" class="form-control cantidad-input" min="1" value="1" required>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <label class="form-label fw-bold">Subtotal</label>
+                                                <input type="text" class="form-control subtotal-linea" value="0.00 EUR" readonly>
+                                            </div>
+                                            <div class="col-md-1 d-grid">
+                                                <button type="button" class="btn btn-outline-danger eliminar-linea" aria-label="Eliminar línea">
+                                                    <i class="bi bi-trash"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mt-4">
+                                        <button type="button" id="aniadirLinea" class="btn btn-outline-primary rounded-pill">
+                                            <i class="bi bi-plus-circle"></i> Añadir libro
+                                        </button>
+                                        <div class="text-md-end">
+                                            <label for="total" class="form-label fw-bold">Total del pedido</label>
+                                            <div class="input-group">
+                                                <span class="input-group-text">EUR</span>
+                                                <input type="number" step="0.01" min="0" th:field="*{total}" class="form-control fw-bold text-primary" id="total" readonly>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mt-5 d-flex gap-3">
+                                <button type="submit" class="btn btn-primary px-5 rounded-pill">
+                                    <i class="bi bi-check-circle"></i> Crear pedido
+                                </button>
+                                <a th:href="@{/admin/pedidos}" class="btn btn-outline-secondary px-5 rounded-pill">
+                                    Cancelar
+                                </a>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </main>
+	
+	<script th:src="@{/js/form-pedidos.js}"></script>
+	
+</body>
+</html>
